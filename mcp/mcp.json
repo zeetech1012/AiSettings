@@ -1,0 +1,53 @@
+{
+  "mcpServers": {
+    "codegraph": {
+      "type": "stdio",
+      "command": "codegraph",
+      "args": ["serve", "--mcp"]
+    },
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp"]
+    },
+    "learn-go-with-tests": {
+      "type": "http",
+      "url": "https://quii.gitbook.io/learn-go-with-tests/~gitbook/mcp"
+    },
+    "huly": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["<ABS_PATH_TO>/huly-mcp/dist/index.cjs"],
+      "env": {
+        "HULY_URL": "<HULY_HOST_URL>",
+        "HULY_TOKEN": "<PERSONAL_HULY_TOKEN>",
+        "HULY_WORKSPACE": "<WORKSPACE_UUID>"
+      }
+    },
+    "obsidian": {
+      "type": "http",
+      "url": "https://127.0.0.1:27124/mcp/",
+      "headers": {
+        "Authorization": "Bearer <PERSONAL_LOCAL_REST_API_KEY>"
+      }
+    },
+    "gradle": {
+      "type": "stdio",
+      "command": "uv",
+      "args": ["run", "--directory", "<ABS_PATH_TO>/gradle-mcp", "gradle-mcp"],
+      "env": {
+        "GRADLE_PROJECT_ROOT": "<ABS_PATH_TO_KMP_REPO>"
+      }
+    },
+    "allure": {
+      "type": "stdio",
+      "command": "uv",
+      "args": ["run", "--with", "mcp[cli]", "mcp", "run", "<ABS_PATH_TO>/mcp-allure/mcp-allure-server.py"]
+    }
+  }
+}

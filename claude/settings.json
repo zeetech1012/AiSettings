@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__codegraph__codegraph_search",
+      "mcp__codegraph__codegraph_context",
+      "mcp__codegraph__codegraph_callers",
+      "mcp__codegraph__codegraph_callees",
+      "mcp__codegraph__codegraph_impact",
+      "mcp__codegraph__codegraph_node",
+      "mcp__codegraph__codegraph_status"
+    ]
+  },
+  "enabledPlugins": {
+    "qa@ai-settings": true,
+    "handoff@handoff-marketplace": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "understand-anything@understand-anything": true,
+    "playwright@claude-plugins-official": true,
+    "chrome-devtools-mcp@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "ai-settings": {
+      "source": { "source": "github", "repo": "zeetech1012/AiSettings" },
+      "autoUpdate": true
+    },
+    "handoff-marketplace": {
+      "source": { "source": "github", "repo": "willseltzer/claude-handoff" },
+      "autoUpdate": true
+    },
+    "understand-anything": {
+      "source": { "source": "github", "repo": "Lum1104/Understand-Anything" }
+    }
+  }
+}

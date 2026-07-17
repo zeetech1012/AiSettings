@@ -1,0 +1,20 @@
+{
+  "_comment": "Фрагмент для ~/.gemini/settings.json (Gemini CLI). context.fileName подключает AGENTS.md. Для Cursor тот же блок mcpServers — в ~/.cursor/mcp.json.",
+  "context": {
+    "fileName": ["AGENTS.md", "GEMINI.md"]
+  },
+  "mcpServers": {
+    "codegraph": { "command": "codegraph", "args": ["serve", "--mcp"] },
+    "context7": { "command": "npx", "args": ["-y", "@upstash/context7-mcp"] },
+    "playwright": { "command": "npx", "args": ["-y", "@playwright/mcp-server"] },
+    "huly": {
+      "command": "node",
+      "args": ["<ABS_PATH_TO>/huly-mcp/dist/index.cjs"],
+      "env": {
+        "HULY_URL": "<HULY_HOST_URL>",
+        "HULY_TOKEN": "<PERSONAL_HULY_TOKEN>",
+        "HULY_WORKSPACE": "<WORKSPACE_UUID>"
+      }
+    }
+  }
+}
