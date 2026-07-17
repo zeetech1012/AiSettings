@@ -8,7 +8,7 @@
 | `context7` | актуальная документация библиотек | — |
 | `playwright` | браузерные сценарии / E2E | — |
 | `learn-go-with-tests` | справочник Go-тестирования | — |
-| `huly` | трекер/доки: issue, синхронизация документации | `HULY_URL`, личный `HULY_TOKEN`, `HULY_WORKSPACE`; путь к сборке huly-mcp. Как получить токен — внутренняя статья «Huly MCP — подключение для коллег (onboarding)» |
+| `huly` | трекер/доки: issue, синхронизация документации | `HULY_URL`, личный `HULY_TOKEN`, `HULY_WORKSPACE`; путь к сборке huly-mcp. Доступ и токен выдаёт администратор Huly. |
 | `obsidian` (опц.) | личная база знаний из сессии | ключ плагина «Local REST API with MCP» |
 | `gradle` (опц.) | сборка/тесты KMP без ручного `./gradlew` | локальные пути |
 | `allure` (опц.) | чтение Allure-отчётов | локальный путь |
@@ -32,8 +32,9 @@
 - **Gemini CLI**: `gemini.settings.json` → слить с `~/.gemini/settings.json`.
 - **Cursor**: блок `mcpServers` из `gemini.settings.json` → `~/.cursor/mcp.json`.
 
-Значения `<HULY_HOST_URL>` / `<WORKSPACE_UUID>` и живые примеры — во внутренней
-онбординг-статье в Huly (teamspace «Claude Code specs»), не в этом репозитории.
+Значения `<HULY_HOST_URL>` и `<WORKSPACE_UUID>` получает каждый пользователь у администратора
+Huly. После настройки проверь личный доступ через `huly-team-work`: назови доступный проект и
+попроси показать preview нового тикета. Живые токены и примеры в репозиторий не добавляй.
 
 Ссылки на upstream каждого сервера (что скачать) — в корневом `README.md`, раздел
 «Open-source стек».

@@ -6,7 +6,8 @@ description: >
   Triggers on: "изучи сервис", "создай документацию для тестов", "сгенерируй контекст",
   "prepare service context", "document this service for QA", "create swagger",
   "что покрыть тестами", "какие эндпоинты у сервиса".
-  Запускай этот навык В РЕПОЗИТОРИИ СЕРВИСА, затем скопируй результат в <qa-repo>/docs/.
+  Запускай этот навык В РЕПОЗИТОРИИ СЕРВИСА, затем передай результат в согласованное место
+  хранения QA-контекста.
 ---
 
 # Generating QA Context Document from a Service Repository
