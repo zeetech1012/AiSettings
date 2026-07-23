@@ -9,6 +9,7 @@
 | `playwright` | браузерные сценарии / E2E | — |
 | `learn-go-with-tests` | справочник Go-тестирования | — |
 | `huly` | трекер/доки: issue, синхронизация документации | `HULY_URL`, личный `HULY_TOKEN`, `HULY_WORKSPACE`; путь к сборке huly-mcp. Доступ и токен выдаёт администратор Huly. |
+| `jira` (опц., если развёрнут) | трекер: issue/задачи из сессии | `JIRA_URL`, личный `JIRA_PERSONAL_TOKEN` (PAT). Self-hosted → `sooperset/mcp-atlassian`; Cloud → официальный remote MCP. |
 | `obsidian` (опц.) | личная база знаний из сессии | ключ плагина «Local REST API with MCP» |
 | `gradle` (опц.) | сборка/тесты KMP без ручного `./gradlew` | локальные пути |
 | `allure` (опц.) | чтение Allure-отчётов | локальный путь |
@@ -21,6 +22,10 @@
 - **huly-mcp** — собрать форк:
   `git clone https://github.com/zeetech1012/huly-mcp && cd huly-mcp && pnpm install && pnpm build:mcp`;
   путь к `dist/index.cjs` подставить в конфиг.
+- **jira** (если развёрнут) — self-hosted Jira (Data Center/Server v8.14+): community-сервер
+  `sooperset/mcp-atlassian` через `uvx mcp-atlassian` (или Docker `ghcr.io/sooperset/mcp-atlassian`),
+  авторизация по **Personal Access Token** (`JIRA_URL` + `JIRA_PERSONAL_TOKEN`). Для Jira **Cloud**
+  вместо него — официальный remote MCP Atlassian (`https://mcp.atlassian.com/v1/mcp`, OAuth, Node 18+).
 - **obsidian** — community-плагин «Local REST API with MCP» (id `obsidian-local-rest-api`, v4+):
   включить HTTPS-сервер (:27124), ключ API из настроек плагина → заголовок `Authorization: Bearer`.
   Endpoint MCP — `https://127.0.0.1:27124/mcp/`.

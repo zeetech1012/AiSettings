@@ -29,6 +29,15 @@
         "HULY_WORKSPACE": "<WORKSPACE_UUID>"
       }
     },
+    "jira": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["mcp-atlassian"],
+      "env": {
+        "JIRA_URL": "<JIRA_BASE_URL>",
+        "JIRA_PERSONAL_TOKEN": "<PERSONAL_ACCESS_TOKEN>"
+      }
+    },
     "obsidian": {
       "type": "http",
       "url": "https://127.0.0.1:27124/mcp/",
