@@ -27,10 +27,7 @@
 
 ## Куда класть
 
-- **Claude Code**: содержимое `mcp.json` → `~/.claude.json` (ключ `mcpServers`) или через `claude mcp add`.
-- **Codex CLI**: `codex.toml` → секции в `~/.codex/config.toml` (или `codex mcp add <name> -- <cmd>`).
-- **Gemini CLI**: `gemini.settings.json` → слить с `~/.gemini/settings.json`.
-- **Cursor**: блок `mcpServers` из `gemini.settings.json` → `~/.cursor/mcp.json`.
+Содержимое `mcp.json` → `~/.claude.json` (ключ `mcpServers`) или через `claude mcp add`.
 
 Значения `<HULY_HOST_URL>` и `<WORKSPACE_UUID>` получает каждый пользователь у администратора
 Huly. После настройки проверь личный доступ через `huly-team-work`: назови доступный проект и
