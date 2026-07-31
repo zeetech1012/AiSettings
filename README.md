@@ -24,7 +24,7 @@ Skills и sub-agents подхватываются сразу; обновлени
 
 | Слой | Что | Канал | Обновление |
 |---|---|---|---|
-| Артефакты | 39 skills + 7 sub-agents (плагин `qa`) | **этот marketplace** | автоматически (`autoUpdate`) |
+| Артефакты | 40 skills + 7 sub-agents (плагин `qa`) | **этот marketplace** | автоматически (`autoUpdate`) |
 | Правила + MCP | глобальный `CLAUDE.md`, состав MCP, инструменты | **онбординг-гайд Claude Code** (`/team-onboarding`, ссылка внутри команды) | вручную: перезалив гайда → сверка |
 
 Плагин не умеет нести always-on правила, поэтому они живут в онбординг-гайде и копируются
@@ -47,7 +47,7 @@ plugins/qa/                      ← плагин: skills + sub-agents
              kmp-fake-koin-module · kmp-multi-transport-architecture · kmp-navigation-troubleshooter
              Reporting: allure-annotate · allure-publish · allure-to-obsidian
              Docs/трекеры: code-to-wiki-docs · docmost-qa-strategy · docmost-doc-sync · huly-doc-sync ·
-             huly-team-work · huly-service-issue · jira-service-issue · obsidian-vault
+             confluence-doc-sync · huly-team-work · huly-service-issue · jira-service-issue · obsidian-vault
              Utils: git-guardrails-claude-code · github-issue-ops · project-tree-documenter ·
              svg-dashboard-generator · awesome-list-manager · caveman · write-a-skill
   agents/    project-researcher · go-service-explorer · frontend-contract-miner ·
