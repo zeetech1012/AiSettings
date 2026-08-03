@@ -49,7 +49,7 @@ plugins/qa/                      ← плагин: skills + sub-agents
              Docs/трекеры: code-to-wiki-docs · docmost-qa-strategy · docmost-doc-sync · huly-doc-sync ·
              confluence-doc-sync · huly-team-work · huly-service-issue · jira-service-issue · obsidian-vault
              Utils: git-guardrails-claude-code · github-issue-ops · project-tree-documenter ·
-             svg-dashboard-generator · awesome-list-manager · caveman · write-a-skill
+             svg-dashboard-generator · awesome-list-manager · caveman · writing-great-skills
   agents/    project-researcher · go-service-explorer · frontend-contract-miner ·
              swagger-to-pydantic · repo-security-auditor · link-integrity-validator · scrum-master
 mcp/                             ← шаблон состава MCP (mcp.json) + что подставить лично (README.md)
@@ -127,4 +127,6 @@ mcp/                             ← шаблон состава MCP (mcp.json) 
 
 ## Лицензия
 
-MIT — см. [LICENSE](LICENSE).
+MIT — см. [LICENSE](LICENSE). Производные сторонние skills (набор
+[mattpocock/skills](https://github.com/mattpocock/skills), тоже MIT) и их происхождение —
+в [NOTICE](NOTICE).
