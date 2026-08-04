@@ -37,16 +37,17 @@ quality, service-docs, orchestration). Concrete stack conventions live in each r
 | Repo | Stack | Project file |
 |---|---|---|
 | `energy-app-native` | **Kotlin** (KMP + Compose + Kaspresso, Android/L1-L2) + **Swift/XCUITest** (iOS native, L3) + Allure | `energy-app-native/CLAUDE.md` (+ `docs/mobile_test_guidelines.md`) |
-| `qa-monorepo` | **Go** (`resty` + `testify` + `ozontech/allure-go` + `coder/websocket`) — backend black-box; портирован с Kotlin/Kotest 2026-06 | `qa-monorepo/CLAUDE.md` |
+| `qa-monorepo` | **Python** (`pytest` + `httpx` + `pydantic` v2 + `allure-pytest`; `websocket-client`, `pika`) — backend black-box; уровень теста задаётся маркером | `qa-monorepo/CLAUDE.md` |
 | `auth_http` и др. Go-сервисы | Go (`net/http`, `httptest`, `testing`/testify, `tokens`) | project `CLAUDE.md` если есть |
 
-**Две ветки тестов по цели:**
-- **Go** → бэкенд black-box (`qa-monorepo`: `resty` + `testify` + `allure-go`, API / контрактные / E2E)
-  **и** тесты Go-сервисов изнутри (`auth_http` и др.: `httptest`/`testing`, `tokens`).
+**Три ветки тестов по цели:**
+- **Python** → бэкенд black-box (`qa-monorepo`: `pytest` + `httpx` + `pydantic` + `allure-pytest`,
+  API / контрактные / E2E над HTTP, WebSocket и AMQP).
+- **Go** → тесты Go-сервисов изнутри (`auth_http` и др.: `httptest`/`testing`, `tokens`) — white-box, в репозитории сервиса.
 - **Kotlin + Swift** → мобилка (`energy-app-native`): Kotlin/KMP (Compose + Kaspresso, `runComposeUiTest`)
   на L1/L2 + нативный **Swift/XCUITest** на iOS (L3). Локаторы — единый `testTag`-контракт на обе платформы.
 
-**Default assumption** для QA-задачи без project-файла: бэкенд / монорепа / контракт → **Go** (`qa-monorepo`);
+**Default assumption** для QA-задачи без project-файла: бэкенд / монорепа / контракт → **Python** (`qa-monorepo`);
 экран/Compose/мобилка → **Kotlin** (KMP), iOS-специфика (клавиатура, secure-field, permissions, боевой логин)
 → **Swift/XCUITest**. Если неясно — спроси. Если у репо есть свой `CLAUDE.md`, **его стек главнее**.
 
