@@ -26,9 +26,8 @@ description: >
 - gradle-прогон не даёт скриншоты (cacheDir вычищен деинсталляцией);
 - надо отличить «логин не прошёл» от «локатор не нашёлся».
 
-НЕ применять для: unit/L1-логики (там нет устройства), массового прогона сьюта
-(это `scripts/run_tests.sh` / `connectedDebugAndroidTest`), чистки логов
-(→ `kaspresso-log-investigator`).
+НЕ применять для: component-тестов на JVM-хосте (в проекте — `L1`; там нет устройства), массового
+прогона сьюта (это `scripts/run_tests.sh` / `connectedDebugAndroidTest`).
 
 ---
 
@@ -129,8 +128,27 @@ allure generate allure-results -o allure-report --clean
   создаёт локально один файл-мусор вместо всех результатов. Проверять размеры выгруженных файлов
   против `run-as ls -l` — расхождение означает, что цикл отработал неверно.
 Отчёт целиком — каталог, поэтому в тикет он идёт архивом
-(`zip -qr report.zip .` из `allure-report`, затем `add_issue_attachment`). Для выгрузки на
-центральный сервер вместо архива — скилл `allure-publish`.
+(`zip -qr report.zip .` из `allure-report`, затем `add_issue_attachment`). Выгрузка на центральный
+`allure-docker-service` вместо архива — процедура в вики:
+`Company/_wiki/qa-infra/allure-publish-procedure.md` (login → CSRF → send-results → generate-report,
+готовый скрипт и джоба CI).
+
+---
+
+## Чистка логов прогона
+
+Logcat приходит с системным шумом Android, в котором шаги теста теряются. Отфильтровать до значимого:
+
+- **выбросить** строки `dalvikvm`, `ActivityManager`, `PackageManager`, `ViewRootImpl`,
+  `OpenGLRenderer`, `Choreographer` и прочие фоновые службы;
+- **оставить** `Kaspresso:` (шаги, хуки, инициализация DSL), `ViewHierarchy:` (дерево Compose на
+  момент падения), `Exception` и `Caused by:`, `I/Allure:` и `AllureRunListener`.
+
+Дальше локализация: найти последний успешный `step("…")`, затем первое исключение
+(`ComposeInteractionException`, `AssertionError`, `NullPointerException`) и сопоставить `testTag` из
+`ViewHierarchy` со Screen-объектом. В итог писать: в каком шаге наблюдался отказ · что именно
+разошлось с ожиданием (какой `testTag` не найден и за какое время) · 3–5 строк стека · предполагаемый
+фикс. Формулировка «тест упал» итогом не является — описывается наблюдаемый отказ.
 
 ---
 
