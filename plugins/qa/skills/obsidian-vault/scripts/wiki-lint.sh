@@ -6,7 +6,7 @@
 #   1. Obsidian CLI: unresolved / orphans / deadends (нужно запущенное приложение)
 #   2. Структура vault: файлы вне деревьев, папки с ведущими/хвостовыми пробелами
 #   3. index.md ↔ файлы проекта (drift: файл есть, в index не упомянут)
-#   4. registry.json (huly-doc-sync) ↔ vault: stale-маппинги (файл удалён, запись осталась)
+#   4. registry.json (doc-sync → huly) ↔ vault: stale-маппинги (файл удалён, запись осталась)
 #      + export-доки Company/Projects/** без записи в registry (не синканы)
 #   5. Напоминание: Huly-сторона (живость docId) проверяется агентом через MCP huly
 #
@@ -14,7 +14,7 @@
 
 set -u
 VAULT="${VAULT:-$HOME/Documents/Obsidian Vault}"
-REGISTRY="${REGISTRY:-$HOME/.claude/skills/huly-doc-sync/registry.json}"
+REGISTRY="${REGISTRY:-$HOME/.claude/skills/doc-sync/huly/registry.json}"
 
 echo "=== wiki-lint | vault: $VAULT ==="
 
@@ -109,7 +109,7 @@ if os.path.isdir(proj_root):
             warns.append(f"[3] export-проект без working-index: Company/Projects/{project}/ (нет Company/_wiki/{project}/index.md)")
 
 # --- [4] registry.json ↔ vault
-print("--- [4] registry.json (huly-doc-sync) ↔ vault ---")
+print("--- [4] registry.json (doc-sync → huly) ↔ vault ---")
 try:
     with open(registry_path, encoding="utf-8") as f:
         reg = json.load(f)

@@ -87,10 +87,10 @@ obsidian backlinks path="..." counts # входящие ссылки конкр�
 
 **Полный механизированный прогон** — `scripts/wiki-lint.sh` (read-only, exit 1 при ERROR):
 CLI-проверки выше + структура vault (файлы/папки вне деревьев, пробелы в именах) +
-drift index.md↔файлы проектов + registry.json (huly-doc-sync) ↔ vault (stale-маппинги,
+drift index.md↔файлы проектов + registry.json (`doc-sync` → huly) ↔ vault (stale-маппинги,
 несинканные export-доки). Huly-сторону (живость docId) скрипт не проверяет — это шаг
 агента через MCP `huly` (`list_documents` по teamspace ↔ map). Запускать перед
-`huly-doc-sync` и периодически. Vault под git: после lint-фиксов — commit.
+выгрузкой через `doc-sync` и периодически. Vault под git: после lint-фиксов — commit.
 
 ### Find index notes
 
