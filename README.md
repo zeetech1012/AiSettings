@@ -24,7 +24,7 @@ Skills и sub-agents подхватываются сразу; обновлени
 
 | Слой | Что | Канал | Обновление |
 |---|---|---|---|
-| Артефакты | 40 skills + 7 sub-agents (плагин `qa`) | **этот marketplace** | автоматически (`autoUpdate`) |
+| Артефакты | 10 skills + 7 sub-agents (плагин `qa`) | **этот marketplace** | автоматически (`autoUpdate`) |
 | Правила + MCP | глобальный `CLAUDE.md`, состав MCP, инструменты | **онбординг-гайд Claude Code** (`/team-onboarding`, ссылка внутри команды) | вручную: перезалив гайда → сверка |
 
 Плагин не умеет нести always-on правила, поэтому они живут в онбординг-гайде и копируются
@@ -39,17 +39,11 @@ claude/CLAUDE.example.md         ← образец детализации (се
 claude/settings.json             ← шаблон: effortLevel, allowlist, marketplaces, плагины
 .claude-plugin/marketplace.json  ← этот репозиторий = Claude-marketplace `ai-settings`
 plugins/qa/                      ← плагин: skills + sub-agents
-  skills/    QA: write-test · test-case-generator · service-doc · review · review-test · diagnose ·
-             debug-test · occams-razor · qa-architect · create-openapi · frontend-contract-miner ·
-             go-service-explorer · swagger-to-pydantic
-             Mobile (KMP): kaspresso-compose-qa-guru · kaspresso-log-investigator ·
-             kaspresso-single-test-diagnostician · compose-testtag-injector · new-page-object ·
-             kmp-fake-koin-module · kmp-multi-transport-architecture · kmp-navigation-troubleshooter
-             Reporting: allure-annotate · allure-publish · allure-to-obsidian
-             Docs/трекеры: code-to-wiki-docs · docmost-qa-strategy · docmost-doc-sync · huly-doc-sync ·
-             confluence-doc-sync · huly-team-work · huly-service-issue · jira-service-issue · obsidian-vault
-             Utils: git-guardrails-claude-code · github-issue-ops · project-tree-documenter ·
-             svg-dashboard-generator · awesome-list-manager · caveman · writing-great-skills
+  skills/    Процедуры с состоянием: doc-sync (huly · docmost · confluence, реестры)
+             service-issue (jira · huly, модель типов и ловушки инстансов)
+             Контекст и диагностика: service-doc · occams-razor · code-to-wiki-docs
+             kaspresso-single-test-diagnostician · obsidian-vault
+             Utils: git-guardrails-claude-code · write-a-skill · writing-great-skills
   agents/    project-researcher · go-service-explorer · frontend-contract-miner ·
              swagger-to-pydantic · repo-security-auditor · link-integrity-validator · scrum-master
 mcp/                             ← шаблон состава MCP (mcp.json) + что подставить лично (README.md)
