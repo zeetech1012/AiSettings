@@ -36,7 +36,7 @@ Skills и sub-agents подхватываются сразу; обновлени
 AGENTS.md                        ← канонический текст правил (роль — персональная, в личном CLAUDE.md)
 claude/CLAUDE.md                 ← @AGENTS.md + Claude-специфика
 claude/CLAUDE.example.md         ← образец детализации (секция роли заполняется под себя)
-claude/settings.json             ← шаблон: effortLevel, allowlist, marketplaces, плагины
+claude/settings.json             ← шаблон: effortLevel, allowlist, hooks-гардрейлы, marketplaces, плагины
 .claude-plugin/marketplace.json  ← этот репозиторий = Claude-marketplace `ai-settings`
 plugins/qa/                      ← плагин: skills + sub-agents
   skills/    Процедуры с состоянием: doc-sync (huly · docmost · confluence, реестры)
