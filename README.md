@@ -14,6 +14,7 @@
 ```
 /plugin marketplace add zeetech1012/AiSettings
 /plugin install qa@ai-settings
+/plugin install pm@ai-settings
 ```
 
 Skills и sub-agents подхватываются сразу; обновления приезжают через `autoUpdate` маркетплейса.
@@ -24,7 +25,7 @@ Skills и sub-agents подхватываются сразу; обновлени
 
 | Слой | Что | Канал | Обновление |
 |---|---|---|---|
-| Артефакты | 10 skills + 7 sub-agents (плагин `qa`) | **этот marketplace** | автоматически (`autoUpdate`) |
+| Артефакты | плагин `qa` (10 skills + 7 sub-agents) и плагин `pm` (10 skills + 4 команды + 2 sub-agents) | **этот marketplace** | автоматически (`autoUpdate`) |
 | Правила + MCP | глобальный `CLAUDE.md`, состав MCP, инструменты | **онбординг-гайд Claude Code** (`/team-onboarding`, ссылка внутри команды) | вручную: перезалив гайда → сверка |
 
 Плагин не умеет нести always-on правила, поэтому они живут в онбординг-гайде и копируются
@@ -46,6 +47,12 @@ plugins/qa/                      ← плагин: skills + sub-agents
              Utils: git-guardrails-claude-code · write-a-skill · writing-great-skills
   agents/    project-researcher · go-service-explorer · frontend-contract-miner ·
              swagger-to-pydantic · repo-security-auditor · link-integrity-validator · scrum-master
+plugins/pm/                      ← плагин: PM-линия (добавлена 2026-08-21, обезличена 2026-08-31)
+  skills/    Atlassian: jira-expert · confluence-expert · atlassian-admin · atlassian-templates
+             Delivery: pm-skills (router) · scrum-master · senior-pm · agent-harness
+             Comms: team-communications · meeting-analyzer
+  commands/  /cs:pm · /cs:pm-loop · /cs:grill-pm · /cs:harness
+  agents/    cs-pm-orchestrator · harness-runner
 mcp/                             ← шаблон состава MCP (mcp.json) + что подставить лично (README.md)
 ```
 
@@ -73,6 +80,8 @@ mcp/                             ← шаблон состава MCP (mcp.json) 
 | `obsidian` | плагин Obsidian «Local REST API with MCP» (v4+, HTTPS :27124, endpoint `/mcp/`) | https://github.com/coddingtonbear/obsidian-local-rest-api |
 | `gradle` (опц.) | `gradle-mcp` (uv) | путь/источник — в `mcp/README.md` |
 | `allure` (опц.) | `mcp-allure` (uv) | локальный сервер — путь в `mcp/README.md` |
+| `docmost-local` | `@wisflux/docmost-local-mcp` (npx) | https://github.com/wisflux/docmost-mcp |
+| `idea` (опц.) | встроенный MCP-сервер JetBrains IDE (HTTP `127.0.0.1`) | https://www.jetbrains.com/help/idea/mcp-server.html |
 
 ### Инструменты рабочей станции
 
