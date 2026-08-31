@@ -3,17 +3,26 @@
     "codegraph": {
       "type": "stdio",
       "command": "codegraph",
-      "args": ["serve", "--mcp"]
+      "args": [
+        "serve",
+        "--mcp"
+      ]
     },
     "context7": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp"]
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ]
     },
     "playwright": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@playwright/mcp"]
+      "args": [
+        "-y",
+        "@playwright/mcp"
+      ]
     },
     "learn-go-with-tests": {
       "type": "http",
@@ -22,7 +31,9 @@
     "huly": {
       "type": "stdio",
       "command": "node",
-      "args": ["<ABS_PATH_TO>/huly-mcp/dist/index.cjs"],
+      "args": [
+        "<ABS_PATH_TO>/huly-mcp/dist/index.cjs"
+      ],
       "env": {
         "HULY_URL": "<HULY_HOST_URL>",
         "HULY_TOKEN": "<PERSONAL_HULY_TOKEN>",
@@ -32,7 +43,9 @@
     "jira": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["mcp-atlassian"],
+      "args": [
+        "mcp-atlassian"
+      ],
       "env": {
         "JIRA_URL": "<JIRA_BASE_URL>",
         "JIRA_PERSONAL_TOKEN": "<PERSONAL_ACCESS_TOKEN>"
@@ -48,7 +61,12 @@
     "gradle": {
       "type": "stdio",
       "command": "uv",
-      "args": ["run", "--directory", "<ABS_PATH_TO>/gradle-mcp", "gradle-mcp"],
+      "args": [
+        "run",
+        "--directory",
+        "<ABS_PATH_TO>/gradle-mcp",
+        "gradle-mcp"
+      ],
       "env": {
         "GRADLE_PROJECT_ROOT": "<ABS_PATH_TO_KMP_REPO>"
       }
@@ -56,7 +74,29 @@
     "allure": {
       "type": "stdio",
       "command": "uv",
-      "args": ["run", "--with", "mcp[cli]", "mcp", "run", "<ABS_PATH_TO>/mcp-allure/mcp-allure-server.py"]
+      "args": [
+        "run",
+        "--with",
+        "mcp[cli]",
+        "mcp",
+        "run",
+        "<ABS_PATH_TO>/mcp-allure/mcp-allure-server.py"
+      ]
+    },
+    "docmost-local": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@wisflux/docmost-local-mcp@0.3.1"
+      ],
+      "env": {
+        "DOCMOST_BASE_URL": "https://docmost.example.com"
+      }
+    },
+    "idea": {
+      "type": "http",
+      "url": "http://127.0.0.1:64342/stream"
     }
   }
 }
