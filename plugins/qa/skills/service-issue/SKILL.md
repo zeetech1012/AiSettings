@@ -15,7 +15,8 @@ description: >
 
 | Трекер | Куда смотреть | Транспорт |
 |---|---|---|
-| **Jira DC** (`jira.example.com`) — целевой | `jira/notes.md` | MCP `jira` (`uvx mcp-atlassian`, режим Server/DC по PAT) |
+| **Jira DC** (`jira.example.com`) — целевой | `jira/notes.md` | MCP `jira` (`uvx mcp-atlassian`, режим Server/DC по PAT); при отказе MCP — REST с тем же PAT |
+| **Xray** в той же Jira | `xray/notes.md` | REST `/rest/raven/1.0/` с PAT; готовые MCP-серверы проверены и отклонены |
 | **Huly** (Huly) — уходящий, миграция с 2026-07-28 | `huly/notes.md` | MCP `huly` (локальная пропатченная сборка) |
 
 MCP даёт доступ к API; этот скилл нужен ради того, чего в MCP нет: модели процесса, шаблонов тел,

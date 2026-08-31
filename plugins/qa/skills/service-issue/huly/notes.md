@@ -15,7 +15,7 @@
 
 Скилл использует **huly MCP, сконфигурированный БОТ-токеном** в рантайме бота — НЕ личный токен:
 
-- `HULY_URL` — адрес Huly (`https://tracker.example.com`).
+- `HULY_URL` — адрес Huly (`https://huly.example.com.ru`).
 - `HULY_TOKEN` — **сервисный/бот-токен** (отдельная учётка бота, не личная).
 - `HULY_WORKSPACE` — UUID рабочего пространства.
 - `HULY_INTAKE_PROJECT` — целевой проект для intake-тикетов (identifier, напр. `САЙТW`).
