@@ -35,19 +35,29 @@
     "understand-anything@understand-anything": true,
     "playwright@claude-plugins-official": true,
     "chrome-devtools-mcp@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true
+    "code-simplifier@claude-plugins-official": true,
+    "pm@ai-settings": true
   },
   "extraKnownMarketplaces": {
     "ai-settings": {
-      "source": { "source": "github", "repo": "zeetech1012/AiSettings" },
+      "source": {
+        "source": "github",
+        "repo": "zeetech1012/AiSettings"
+      },
       "autoUpdate": true
     },
     "handoff-marketplace": {
-      "source": { "source": "github", "repo": "willseltzer/claude-handoff" },
+      "source": {
+        "source": "github",
+        "repo": "willseltzer/claude-handoff"
+      },
       "autoUpdate": true
     },
     "understand-anything": {
-      "source": { "source": "github", "repo": "Lum1104/Understand-Anything" }
+      "source": {
+        "source": "github",
+        "repo": "Lum1104/Understand-Anything"
+      }
     }
   }
 }
