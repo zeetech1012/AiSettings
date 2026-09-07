@@ -1,0 +1,46 @@
+{
+  "claude": {
+    "label": "Claude Code",
+    "rules": ".claude/CLAUDE.md",
+    "skills": ".claude/skills",
+    "mcp": ".claude.json",
+    "mcp_format": "claude",
+    "agents": ".claude/agents",
+    "commands": ".claude/commands",
+    "excluded_skills": []
+  },
+  "codex": {
+    "label": "Codex",
+    "rules": ".codex/AGENTS.md",
+    "skills": ".agents/skills",
+    "mcp": ".codex/config.toml",
+    "mcp_format": "codex",
+    "excluded_skills": ["git-guardrails-claude-code"]
+  },
+  "agy": {
+    "label": "Antigravity CLI (agy)",
+    "rules": ".gemini/GEMINI.md",
+    "rules_limit": 12000,
+    "baseline": ".gemini/antigravity-cli/aisettings/AGENTS.md",
+    "skills": ".gemini/antigravity-cli/skills",
+    "mcp": ".gemini/config/mcp_config.json",
+    "mcp_format": "agy",
+    "excluded_skills": ["git-guardrails-claude-code", "writing-great-skills"]
+  },
+  "qwen": {
+    "label": "Qwen Code",
+    "rules": ".qwen/QWEN.md",
+    "skills": ".qwen/skills",
+    "mcp": ".qwen/settings.json",
+    "mcp_format": "qwen",
+    "excluded_skills": ["git-guardrails-claude-code"]
+  },
+  "opencode": {
+    "label": "OpenCode",
+    "rules": ".config/opencode/AGENTS.md",
+    "skills": ".config/opencode/skills",
+    "mcp": ".config/opencode/opencode.json",
+    "mcp_format": "opencode",
+    "excluded_skills": ["git-guardrails-claude-code", "writing-great-skills"]
+  }
+}

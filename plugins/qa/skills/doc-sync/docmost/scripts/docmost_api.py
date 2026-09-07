@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """docmost_api.py — детерминированный клиент internal REST API Docmost.
 
-Учётные данные ТОЛЬКО из ENV (задать в ~/.claude/settings.local.json → env):
+Учётные данные ТОЛЬКО из ENV процесса активного AI-клиента:
   DOCMOST_URL      — базовый URL (напр. https://docmost.example.com)
   DOCMOST_EMAIL    — email учётки
   DOCMOST_PASSWORD — пароль

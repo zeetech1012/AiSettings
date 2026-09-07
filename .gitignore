@@ -2,3 +2,8 @@
 HANDOFF.md
 ONBOARDING.md
 *.zip
+__pycache__/
+.pytest_cache/
+.venv/
+allure-results/
+*.local.json

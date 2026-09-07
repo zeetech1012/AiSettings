@@ -12,7 +12,7 @@
 
 ## Учётные данные
 
-MCP-сервер `jira` сконфигурирован в `~/.claude.json` (scope `user`):
+MCP-сервер `jira` настраивается в пользовательском MCP-конфиге активного клиента:
 
 - `JIRA_URL` — `https://jira.example.com`
 - `JIRA_PERSONAL_TOKEN` — PAT (DC-режим; `username/token` — только Cloud)
