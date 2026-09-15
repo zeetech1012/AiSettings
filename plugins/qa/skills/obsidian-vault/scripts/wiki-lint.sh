@@ -6,15 +6,15 @@
 #   1. Obsidian CLI: unresolved / orphans / deadends (нужно запущенное приложение)
 #   2. Структура vault: файлы вне деревьев, папки с ведущими/хвостовыми пробелами
 #   3. index.md ↔ файлы проекта (drift: файл есть, в index не упомянут)
-#   4. registry.json (doc-sync → huly) ↔ vault: stale-маппинги (файл удалён, запись осталась)
-#      + export-доки Company/Projects/** без записи в registry (не синканы)
-#   5. Напоминание: Huly-сторона (живость docId) проверяется агентом через MCP huly
+#   4. registry.json (doc-sync → confluence) ↔ vault: stale-маппинги (файл удалён, запись осталась)
+#      + export-доки Company/Projects/** без записи в registry (не выгружены)
+#   5. Напоминание: Confluence-сторона (живость pageId) проверяется агентом через MCP jira (confluence_*)
 #
 # Exit code: 1 если найдены ERROR, иначе 0 (WARN/INFO не влияют).
 
 set -u
 VAULT="${VAULT:-$HOME/Documents/Obsidian Vault}"
-REGISTRY="${REGISTRY:-$HOME/.claude/skills/doc-sync/huly/registry.json}"
+REGISTRY="${REGISTRY:-$HOME/.claude/skills/doc-sync/confluence/registry.json}"
 
 echo "=== wiki-lint | vault: $VAULT ==="
 
@@ -109,7 +109,7 @@ if os.path.isdir(proj_root):
             warns.append(f"[3] export-проект без working-index: Company/Projects/{project}/ (нет Company/_wiki/{project}/index.md)")
 
 # --- [4] registry.json ↔ vault
-print("--- [4] registry.json (doc-sync → huly) ↔ vault ---")
+print("--- [4] registry.json (doc-sync → confluence) ↔ vault ---")
 try:
     with open(registry_path, encoding="utf-8") as f:
         reg = json.load(f)
@@ -120,25 +120,25 @@ except Exception as e:
 registered = set()
 for pname, proj in reg.get("projects", {}).items():
     vroot = proj.get("vaultRoot", "")
-    for entry in proj.get("documents", {}).get("map", []):
+    for entry in proj.get("map", []):
         path = os.path.normpath(os.path.join(vault, vroot, entry["obsidian"]))
         registered.add(path)
         if not os.path.isfile(path):
-            errors.append(f"[4] stale-маппинг в registry ({pname}): файла нет — {entry['obsidian']} (docId {entry['docId']})")
+            errors.append(f"[4] stale-маппинг в registry ({pname}): файла нет — {entry['obsidian']} (pageId {entry['pageId']})")
 
 if os.path.isdir(proj_root):
     for root, dirs, files in os.walk(proj_root):
         for f in files:
             if f.endswith(".md") and os.path.normpath(os.path.join(root, f)) not in registered:
-                warns.append(f"[4] INFO: export-док без записи в registry (не синкан в Huly): {rel(os.path.join(root,f))}")
+                warns.append(f"[4] INFO: export-док без записи в registry (не выгружен в Confluence): {rel(os.path.join(root,f))}")
 
 # --- итог
 print("\n=== ИТОГ ===")
 for e in errors: print(f"ERROR {e}")
 for w in warns:  print(f"WARN  {w}")
 print(f"\nERROR: {len(errors)} | WARN/INFO: {len(warns)}")
-print("[5] Huly-сторона (живость docId / parent, лишние доки в teamspace) — агентом через MCP huly:")
-print("    list_documents по каждому teamspace из registry ↔ map (дрейф в обе стороны).")
+print("[5] Confluence-сторона (живость pageId / родитель, лишние страницы в space) — агентом через MCP jira:")
+print("    confluence_get_page по каждому pageId из registry ↔ map, confluence_get_page_children родителя (дрейф в обе стороны).")
 sys.exit(1 if errors else 0)
 PYEOF
 rc=$?

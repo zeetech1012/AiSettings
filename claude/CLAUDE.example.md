@@ -200,7 +200,7 @@ When reviewing or generating code, always check and call out:
 | **Test Plan** | объём, подход, уровни, критерии входа и выхода, риски, окружение, раздел «что не тестируем и почему» | export-слой vault → Confluence |
 | **Test Environment Requirements** | контуры, доступы, ключи, гейты `ALLOW_*`, изолированный стенд | раздел плана |
 | **Test Status / Completion Report** | срез покрытия, результаты прогона, ссылка на Allure | отдельная страница, **не** раздел плана |
-| **Test Incident Report** (дефект) | один дефект — один тикет | Jira DC / Huly |
+| **Test Incident Report** (дефект) | один дефект — один тикет | Jira DC |
 
 **Четыре правила, без которых документ не принимается:**
 
@@ -322,10 +322,10 @@ Stop and ask for the context document.
 по назначению** (граница назначения = граница дерева):
 
 - `Company/_wiki/<проект>/` — **рабочий LLM-слой** (внутреннее): планы, `tasks/`, аудиты,
-  proposals, ревью, отчёты прогонов, codegraph-обследования, мета. **НЕ выгружается в Huly.**
+  proposals, ревью, отчёты прогонов, codegraph-обследования, мета. **Наружу не выгружается.**
 - `Company/Projects/<проект>/` — **export-документация для коллег** (описание системы: overview,
-  architecture, app/data-flow, build/run, API-docs, концепты). Отсюда `huly-doc-sync` → Huly.
-  Держать чистым: **не ставить `[[Company/_wiki/...]]`-ссылки внутри export-доков** (утекут в Huly).
+  architecture, app/data-flow, build/run, API-docs, концепты). Отсюда `doc-sync` → Confluence.
+  Держать чистым: **не ставить `[[Company/_wiki/...]]`-ссылки внутри export-доков** (утекут в Confluence).
 - Каждый проект: `index.md` (каталог: секции 🧠 Working + 📤 Export, one-line summary) +
   `log.md` (append-only, `## [YYYY-MM-DD] <op> | <desc>`, ops: ingest/query/lint/scaffold).
 - Кросс-ссылки между деревьями — **полным vault-путём** (`[[Company/Projects/...|подпись]]` /
