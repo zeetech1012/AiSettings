@@ -5,8 +5,8 @@ Antigravity CLI (`agy`), Qwen Code и OpenCode**. Exporter готовит нат
 общих исходников; установщик показывает изменения и защищает личные файлы от перезаписи.
 Claude marketplace остаётся отдельным способом доставки тех же skills и sub-agents.
 
-> Личный проект автора. Публичный контент обезличен плейсхолдерами (`example.com`) —
-> внутренние адреса (Git-хостинг, трекер Huly, вики Docmost) каждый подставляет локально.
+> Личный проект автора. Публичный контент обезличен плейсхолдерами (`example.com`);
+> внутренние адреса (Git-хостинг, Jira DC, Confluence DC) каждый подставляет локально.
 
 ## Экспорт и установка
 
@@ -143,8 +143,8 @@ claude/CLAUDE.example.md         ← образец детализации (се
 claude/settings.json             ← шаблон: effortLevel, allowlist, hooks-гардрейлы, marketplaces, плагины
 .claude-plugin/marketplace.json  ← этот репозиторий = Claude-marketplace `ai-settings`
 plugins/qa/                      ← плагин: skills + sub-agents
-  skills/    Процедуры с состоянием: doc-sync (huly · docmost · confluence, реестры)
-             service-issue (jira · huly, модель типов и ловушки инстансов)
+  skills/    Процедуры с состоянием: doc-sync (confluence, реестр страниц)
+             service-issue (jira · xray, модель типов и ловушки инстанса)
              Контекст и диагностика: service-doc · occams-razor · code-to-wiki-docs
              kaspresso-single-test-diagnostician · obsidian-vault
              Utils: git-guardrails-claude-code · write-a-skill · writing-great-skills
@@ -169,7 +169,7 @@ mcp/                             ← шаблон состава MCP (mcp.json) 
 
 ## Open-source стек (что скачать)
 
-Весь сетап стоит на open-source. Ссылки на upstream (секретов нет — подставляется локально):
+Весь набор стоит на open-source. Ссылки на upstream (секретов нет — подставляется локально):
 
 ### MCP-серверы (состав — `mcp/`)
 
@@ -179,11 +179,10 @@ mcp/                             ← шаблон состава MCP (mcp.json) 
 | `context7` | `@upstash/context7-mcp` (npx) | https://github.com/upstash/context7 |
 | `playwright` | `@playwright/mcp` (npx) | https://github.com/microsoft/playwright-mcp |
 | `learn-go-with-tests` | HTTP (GitBook) | https://github.com/quii/learn-go-with-tests |
-| `huly` | пропатченная сборка `huly-mcp` (node) | https://github.com/zeetech1012/huly-mcp — форк; upstream npm `@firfi/huly-mcp` |
+| `jira` | `mcp-atlassian` (uvx): Jira DC + Confluence DC по PAT | https://github.com/sooperset/mcp-atlassian |
 | `obsidian` | плагин Obsidian «Local REST API with MCP» (v4+, HTTPS :27124, endpoint `/mcp/`) | https://github.com/coddingtonbear/obsidian-local-rest-api |
-| `gradle` (опц.) | `gradle-mcp` (uv) | путь/источник — в `mcp/README.md` |
+| `gradle` (опц.) | `gradle-mcp` (uv) | локальный сервер — путь в `mcp/README.md` |
 | `allure` (опц.) | `mcp-allure` (uv) | локальный сервер — путь в `mcp/README.md` |
-| `docmost-local` | `@wisflux/docmost-local-mcp` (npx) | https://github.com/wisflux/docmost-mcp |
 | `idea` (опц.) | встроенный MCP-сервер JetBrains IDE (HTTP `127.0.0.1`) | https://www.jetbrains.com/help/idea/mcp-server.html |
 
 ### Инструменты рабочей станции
@@ -202,14 +201,12 @@ mcp/                             ← шаблон состава MCP (mcp.json) 
 
 | Сервис | Роль | Источник |
 |---|---|---|
-| Huly | трекер + TMS + доки | https://github.com/hcengineering/huly-selfhost (ядро: `hcengineering/platform`) |
-| Docmost | командная вики | https://github.com/docmost/docmost |
 | Allure | отчёты | https://github.com/allure-framework/allure2 · docker: https://github.com/fescobar/allure-docker-service |
 
 ### Skills — открытый стандарт
 
 - **Этот репозиторий** = общие каталоги `qa` и `pm`; доставка через exporter или Claude marketplace.
-- Открытый стандарт **Agent Skills** — папка-скилл с `SKILL.md`; свои skills кладите в `plugins/qa/skills/` + push.
+- Открытый стандарт **Agent Skills** — папка-скилл с `SKILL.md`; свои skills клади в `plugins/qa/skills/` и отправляй push.
 - Сторонние Claude-плагины (handoff, understand-anything и т.п.) — через `/plugin marketplace add <repo-url>`.
 
 Проверенные сторонние наборы:
@@ -227,7 +224,7 @@ mcp/                             ← шаблон состава MCP (mcp.json) 
 ## Обновления
 
 - Обнови клон, создай новый каталог экспорта, повтори preview и `install --apply` с прежними
-  `--components`. Редактируется источник, не сгенерированные файлы.
+  `--components`. Правь источник: сгенерированные файлы перезаписывает следующий экспорт.
 - Для Claude marketplace сохраняется штатное обновление плагинов; rules и MCP обновляются отдельно.
 - Новый skill = папка в `plugins/qa/skills/` или `plugins/pm/skills/`; exporter обнаружит её сам.
 

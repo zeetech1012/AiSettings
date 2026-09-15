@@ -13,7 +13,7 @@ description: Поиск, создание и управление заметка
 - `Company/_wiki/<проект>/` — рабочий LLM-слой (планы, tasks, аудиты, отчёты).
   - `handoffs/<branch-slug>.md` — durable per-branch handoff (зеркало gitignored `./HANDOFF.md` репо;
     слаг ветки `/`→`--`). Создаётся/обновляется handoff-скилами; правило — глобальные инструкции › Handoff.
-- `Company/Projects/<проект>/` — export-документация для коллег (→ Huly).
+- `Company/Projects/<проект>/` — export-документация для коллег (→ Confluence через `doc-sync`).
 
 ## Access — два равноправных канала
 
@@ -42,7 +42,7 @@ description: Поиск, создание и управление заметка
 - Obsidian `[[wikilinks]]` syntax: `[[Note Title]]`
 - Связанные заметки — внизу заметки
 - Кросс-ссылки между деревьями — полным vault-путём: `[[Company/Projects/...|подпись]]`
-- В export-доках (`Company/Projects/`) не ставить ссылок на `Company/_wiki/...` (утекут в Huly)
+- В export-доках (`Company/Projects/`) не ставить ссылок на `Company/_wiki/...` (утекут в Confluence)
 
 ## Workflows
 
@@ -87,9 +87,9 @@ obsidian backlinks path="..." counts # входящие ссылки конкр�
 
 **Полный механизированный прогон** — `scripts/wiki-lint.sh` (read-only, exit 1 при ERROR):
 CLI-проверки выше + структура vault (файлы/папки вне деревьев, пробелы в именах) +
-drift index.md↔файлы проектов + registry.json (`doc-sync` → huly) ↔ vault (stale-маппинги,
-несинканные export-доки). Huly-сторону (живость docId) скрипт не проверяет — это шаг
-агента через MCP `huly` (`list_documents` по teamspace ↔ map). Запускать перед
+drift index.md↔файлы проектов + registry.json (`doc-sync` → confluence) ↔ vault (stale-маппинги,
+невыгруженные export-доки). Confluence-сторону (живость pageId) скрипт не проверяет — это шаг
+агента через MCP `jira` (`confluence_get_page` по каждому pageId из map). Запускать перед
 выгрузкой через `doc-sync` и периодически. Vault под git: после lint-фиксов — commit.
 
 ### Find index notes

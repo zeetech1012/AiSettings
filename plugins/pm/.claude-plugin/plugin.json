@@ -1,7 +1,7 @@
 {
   "name": "pm",
-  "description": "PM-линия: Atlassian-скиллы (jira/confluence/admin/templates), sprint/portfolio-аналитика, комms, meeting-анализ + agent-harness и cs-оркестрация",
-  "version": "0.1.1",
+  "description": "PM-линия: Atlassian-скиллы (jira/confluence/admin/templates), sprint/portfolio-аналитика, comms, meeting-анализ + agent-harness и cs-оркестрация",
+  "version": "0.1.2",
   "author": {
     "name": "zeetech1012"
   }

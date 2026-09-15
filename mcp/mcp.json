@@ -28,18 +28,6 @@
       "type": "http",
       "url": "https://quii.gitbook.io/learn-go-with-tests/~gitbook/mcp"
     },
-    "huly": {
-      "type": "stdio",
-      "command": "node",
-      "args": [
-        "<ABS_PATH_TO>/huly-mcp/dist/index.cjs"
-      ],
-      "env": {
-        "HULY_URL": "<HULY_HOST_URL>",
-        "HULY_TOKEN": "<PERSONAL_HULY_TOKEN>",
-        "HULY_WORKSPACE": "<WORKSPACE_UUID>"
-      }
-    },
     "jira": {
       "type": "stdio",
       "command": "uvx",
@@ -48,7 +36,9 @@
       ],
       "env": {
         "JIRA_URL": "<JIRA_BASE_URL>",
-        "JIRA_PERSONAL_TOKEN": "<PERSONAL_ACCESS_TOKEN>"
+        "JIRA_PERSONAL_TOKEN": "<JIRA_PERSONAL_ACCESS_TOKEN>",
+        "CONFLUENCE_URL": "<CONFLUENCE_BASE_URL>",
+        "CONFLUENCE_PERSONAL_TOKEN": "<CONFLUENCE_PERSONAL_ACCESS_TOKEN>"
       }
     },
     "obsidian": {
@@ -82,17 +72,6 @@
         "run",
         "<ABS_PATH_TO>/mcp-allure/mcp-allure-server.py"
       ]
-    },
-    "docmost-local": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@wisflux/docmost-local-mcp@0.3.1"
-      ],
-      "env": {
-        "DOCMOST_BASE_URL": "https://docmost.example.com"
-      }
     },
     "idea": {
       "type": "http",

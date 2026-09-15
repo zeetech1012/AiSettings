@@ -50,7 +50,7 @@ class TestExport:
             report = install(stage / "codex", tmp_path / "home", ["mcp"], True)
         with allure.step("Then: installation refuses and names the unconfigured servers"):
             assert not report["applied"]
-            assert "huly" in report["conflicts"][0]["reason"]
+            assert "jira" in report["conflicts"][0]["reason"]
             assert not (tmp_path / "home").exists()
 
     @allure.title("CLI exports all five clients; reusing a nonempty output fails safely")
