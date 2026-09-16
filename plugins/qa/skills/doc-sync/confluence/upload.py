@@ -16,10 +16,12 @@
 
 Использование:
     upload.py <space> <prefix> <vaultRoot> [--parent <id>] [--dry]
+    Родитель корня дерева без --parent: registry.projects[<prefix>].rootParentPageId, иначе homepage.
 """
 import json
 import os
 import re
+import unicodedata
 import shutil
 import subprocess
 import sys
@@ -88,23 +90,38 @@ def load_linkmap():
             rel, title = m.get("obsidian"), m.get("title")
             if not (vroot and rel and title):
                 continue
-            # заголовок с двоеточием («Data Flow: …») в wiki-разметке читается
-            # как «пространство:страница»; префикс пространства снимает разбор
-            if ":" in title and proj.get("space"):
-                title = f"{proj['space']}:{title}"
             full = f"{vroot}/{rel}".rstrip("/")
+            # CHANGED: ключи нормализуются в NFC. Имена файлов macOS приходят в NFD,
+            # а Obsidian пишет пути ссылок в NFC: без нормализации любая цель с «й»
+            # или «ё» не находится, и в Confluence уезжает ссылка на несуществующий
+            # заголовок (найдено 2026-08-21 на «13 Настройки», «Централизованный портал»).
             for key in {full, full[:-3] if full.endswith(".md") else full}:
-                out[key] = title
+                out[unicodedata.normalize("NFC", key)] = (title, proj.get("space"))
     return out
 
 
 LINKMAP = load_linkmap()
+CURRENT_SPACE = None  # ставится в main(): пространство текущей выгрузки
 
 
 def resolve_links(text):
-    """Заменяет цели ссылок на заголовки страниц. Неизвестные цели не трогает."""
+    """Заменяет цели ссылок на заголовки страниц. Неизвестные цели не трогает.
+
+    Префикс «SPACE:» ставится в двух случаях: цель живёт в другом пространстве
+    (иначе ri:page без space-key ищется в текущем и ссылка бьётся) и заголовок
+    с двоеточием («Data Flow: …» читается wiki-парсером как «пространство:страница»)."""
     def title_of(target):
-        return LINKMAP.get(target, target)
+        # CHANGED: цель с якорем ([[Путь#Раздел]]) в LINKMAP не лежит — ключи там без
+        # якорей. Без разделения ссылка уезжала в Confluence сырым путём вместо
+        # заголовка (найдено 2026-08-21 на «Заметки для QA»).
+        target, sep, anchor = target.partition("#")
+        hit = LINKMAP.get(unicodedata.normalize("NFC", target))
+        if hit is None:
+            return target + sep + anchor
+        title, space = hit
+        if space and (space != CURRENT_SPACE or ":" in title):
+            return f"{space}:{title}{sep}{anchor}"
+        return title + sep + anchor
 
     def one(m):
         alias, target = m.group(1), m.group(2)
@@ -112,8 +129,10 @@ def resolve_links(text):
 
     text = re.sub(r"\[([^\]\n|]*)\|([^\]\n|]+)\]", one, text)
     # форма [[Путь]] без подписи: md2wiki отдаёт её как [Путь]
-    return re.sub(r"\[([^\]\n|]+)\]",
+    text = re.sub(r"\[([^\]\n|]+)\]",
                   lambda m: "[" + title_of(m.group(1)) + "]", text)
+
+    return text
 
 
 def add_toc(body):
@@ -143,14 +162,21 @@ def homepage_id(space):
 
 
 def upsert(space, title, body, parent_id, dry=False, known_id=None):
-    existing = find_page(space, title)
-    # CHANGED: заголовок изменился в источнике — страница ищется по id из registry.
-    # Без этого PUT не находит её по новому заголовку и создаёт дубль рядом со старой.
-    if not existing and known_id:
+    # CHANGED 2026-09-04: сначала страница из registry по id, потом поиск по заголовку.
+    # Заголовки детей стали короткими («Архитектура (auth_http)»); поиск по заголовку
+    # первым мог найти чужую страницу с таким же именем и перезаписать её.
+    existing = None
+    if known_id:
         try:
             existing = api("GET", f"/rest/api/content/{known_id}?expand=version")
         except RuntimeError:
             existing = None
+    by_title = find_page(space, title)
+    if by_title and existing and by_title["id"] != existing["id"]:
+        raise RuntimeError(f"заголовок «{title}» уже занят страницей {by_title['id']}, "
+                           f"а в registry за этот файл отвечает {existing['id']}; прогон остановлен")
+    if not existing:
+        existing = by_title
     if dry:
         act = "переименовать" if existing and existing["title"] != title else (
             "обновить" if existing else "создать")
@@ -233,18 +259,36 @@ def attach_diagrams(md_path, page_id):
     return n
 
 
-def make_title(prefix, base, used, fname):
+def code_of(title):
+    """Код в скобках в конце заголовка шапки: «Авторизация (auth_http)» -> auth_http."""
+    m = re.search(r"\(([^()]+)\)\s*$", title or "")
+    return m.group(1).strip() if m else None
+
+
+def make_title(prefix, base, used, fname, code=None, is_root=False):
     # backticks из H1 в заголовке страницы не нужны: разметки там нет,
     # они остались бы литеральными символами
     base = base.replace("`", "").strip()
-    t = base if base.lower().startswith(prefix.lower()) else f"{prefix} — {base}"
+    # CHANGED 2026-09-04: шапка раздела — только имя раздела (ключ реестра), дети —
+    # «Тема (код)», где код берётся из скобок ближайшей шапки (проекта или подраздела).
+    # Полный префикс в детях не повторяется (решение владельца 2026-09-04); код нужен,
+    # потому что заголовок уникален в пространстве, а «Архитектура» есть у каждого сервиса.
+    # Шапка без кода (например «Платформа: контуры») — дети без хвоста.
+    if is_root:
+        # H1 корневого README, начинающийся с ключа реестра, остаётся заголовком целиком
+        # («Jira — как устроены проекты…»); иначе заголовок = ключ («Авторизация (auth_http)»)
+        t = base if base.lower().startswith(prefix.lower()) else prefix
+    elif code and not code_of(base):
+        t = f"{base} ({code})"
+    else:
+        t = base
     if t in used:                      # коллизия внутри проекта
         t = f"{t} ({os.path.splitext(fname)[0]})"
     used.add(t)
     return t
 
 
-def walk(space, prefix, root, rel, parent_id, entries, used, dry, indent=1):
+def walk(space, prefix, root, rel, parent_id, entries, used, dry, code=None, indent=1):
     """Обрабатывает каталог rel (относительно root) и его подкаталоги."""
     abs_dir = os.path.join(VAULT, root, rel) if rel else os.path.join(VAULT, root)
     names = sorted(os.listdir(abs_dir))
@@ -258,11 +302,15 @@ def walk(space, prefix, root, rel, parent_id, entries, used, dry, indent=1):
         p = os.path.join(abs_dir, "README.md")
         base = md2wiki(p, True).strip() or rel
         relpath = os.path.join(rel, "README.md")
-        title = make_title(prefix, base, used, "README")
+        title = make_title(prefix, base, used, "README", code)
         body = add_toc(resolve_links(md2wiki(p))) + FOOTER.format(
             path=f"{root}/{relpath}")
-        act, pid = upsert(space, title, body, parent_id, dry,
-                          entries.get(relpath, {}).get("pageId"))
+        # CHANGED 2026-09-04: README появился в каталоге, который раньше был заглушкой
+        # (section-stub, ключ «rel/») — страница заглушки переиспользуется, pageId живёт.
+        known = (entries.get(relpath, {}).get("pageId")
+                 or entries.get(rel + "/", {}).get("pageId"))
+        act, pid = upsert(space, title, body, parent_id, dry, known)
+        entries.pop(rel + "/", None)
         print(f"{pad}{act:10} [раздел] {title}  id={pid}")
         if not dry:
             d = attach_diagrams(p, pid)
@@ -271,13 +319,14 @@ def walk(space, prefix, root, rel, parent_id, entries, used, dry, indent=1):
         entries[relpath] = {"obsidian": relpath, "pageId": pid, "title": title,
                             "role": "section-index"}
         parent_id = pid
+        code = code_of(base) or code       # подраздел со своим кодом даёт его детям
         files.remove("README.md")
 
     for f in files:
         p = os.path.join(abs_dir, f)
         relpath = os.path.join(rel, f) if rel else f
         base = md2wiki(p, True).strip() or os.path.splitext(f)[0]
-        title = make_title(prefix, base, used, f)
+        title = make_title(prefix, base, used, f, code)
         body = add_toc(resolve_links(md2wiki(p))) + FOOTER.format(
             path=f"{root}/{relpath}")
         act, pid = upsert(space, title, body, parent_id, dry,
@@ -295,7 +344,7 @@ def walk(space, prefix, root, rel, parent_id, entries, used, dry, indent=1):
         if has_readme:
             sub_parent = parent_id           # README внутри станет разделом сам
         else:
-            title = make_title(prefix, d, used, d)
+            title = make_title(prefix, d, used, d, code)
             body = SECTION_BODY.format(path=f"{root}/{sub_rel}")
             act, pid = upsert(space, title, body, parent_id, dry,
                               entries.get(sub_rel + "/", {}).get("pageId"))
@@ -303,7 +352,7 @@ def walk(space, prefix, root, rel, parent_id, entries, used, dry, indent=1):
             entries[sub_rel + "/"] = {"obsidian": sub_rel + "/", "pageId": pid,
                                       "title": title, "role": "section-stub"}
             sub_parent = pid
-        walk(space, prefix, root, sub_rel, sub_parent, entries, used, dry, indent + 1)
+        walk(space, prefix, root, sub_rel, sub_parent, entries, used, dry, code, indent + 1)
 
 
 def main():
@@ -316,6 +365,8 @@ def main():
         k = args.index("--parent")
         parent, args[k:k + 2] = args[k + 1], []
     space, prefix, root = args[0], args[1], args[2]
+    global CURRENT_SPACE
+    CURRENT_SPACE = space
 
     abs_root = os.path.join(VAULT, root)
     reg = (json.load(open(REGISTRY, encoding="utf-8")) if os.path.exists(REGISTRY)
@@ -325,15 +376,22 @@ def main():
     entry["space"], entry["vaultRoot"] = space, root
     entries = {m["obsidian"]: m for m in entry.get("map", [])}
     used = set()
+    code = code_of(prefix)   # «Авторизация (auth_http)» -> auth_http; без скобок — None
 
     # корневой README проекта — родитель всего дерева
     if parent is None:
         if os.path.exists(os.path.join(abs_root, "README.md")):
             p = os.path.join(abs_root, "README.md")
-            title = make_title(prefix, md2wiki(p, True).strip() or prefix, used, "README")
+            title = make_title(prefix, md2wiki(p, True).strip() or prefix, used, "README",
+                               is_root=True)
             body = add_toc(resolve_links(md2wiki(p))) + FOOTER.format(
                 path=f"{root}/README.md")
-            act, parent = upsert(space, title, body, homepage_id(space), dry,
+            # CHANGED 2026-09-04: родитель корневого README берётся из registry
+            # (rootParentPageId), иначе homepage. Без этого дерево, вручную
+            # положенное под раздел пространства, при полном прогоне уезжало на
+            # homepage (проект «Jira», 2026-09-01 и 2026-09-02).
+            root_parent = entry.get("rootParentPageId") or homepage_id(space)
+            act, parent = upsert(space, title, body, root_parent, dry,
                                  entries.get("README.md", {}).get("pageId"))
             print(f"  {act:10} [родитель] {title}  id={parent}")
             if not dry:
@@ -343,7 +401,7 @@ def main():
             entries["README.md"] = {"obsidian": "README.md", "pageId": parent,
                                     "title": title, "role": "parent-index"}
         else:
-            parent = homepage_id(space)
+            parent = entry.get("rootParentPageId") or homepage_id(space)
 
     names = sorted(os.listdir(abs_root))
     files = [n for n in names if n.endswith(".md") and n != "README.md"]
@@ -352,7 +410,7 @@ def main():
     for f in files:
         p = os.path.join(abs_root, f)
         base = md2wiki(p, True).strip() or os.path.splitext(f)[0]
-        title = make_title(prefix, base, used, f)
+        title = make_title(prefix, base, used, f, code)
         body = add_toc(resolve_links(md2wiki(p))) + FOOTER.format(path=f"{root}/{f}")
         act, pid = upsert(space, title, body, parent, dry,
                           entries.get(f, {}).get("pageId"))
@@ -366,14 +424,14 @@ def main():
         if os.path.exists(os.path.join(abs_root, d, "README.md")):
             sub_parent = parent
         else:
-            title = make_title(prefix, d, used, d)
+            title = make_title(prefix, d, used, d, code)
             act, pid = upsert(space, title, SECTION_BODY.format(path=f"{root}/{d}"),
                               parent, dry, entries.get(d + "/", {}).get("pageId"))
             print(f"  {act:10} [раздел] {title}  id={pid}")
             entries[d + "/"] = {"obsidian": d + "/", "pageId": pid, "title": title,
                                 "role": "section-stub"}
             sub_parent = pid
-        walk(space, prefix, root, d, sub_parent, entries, used, dry, 2)
+        walk(space, prefix, root, d, sub_parent, entries, used, dry, code, 2)
 
     if not dry:
         entry["map"] = [entries[k] for k in sorted(entries)]

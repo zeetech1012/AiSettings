@@ -13,7 +13,7 @@ description: >
 
 | Адресат | Куда смотреть | Транспорт |
 |---|---|---|
-| **Confluence DC** (`confluence.example.com`) | `confluence/notes.md`, реестр `confluence/registry.json`, `confluence/upload.py`, `confluence/md2wiki.py` | REST по PAT, markdown → wiki-разметка |
+| **Confluence DC** (`confluence.example.com`) | `confluence/notes.md`, реестр `confluence/registry.json`, скрипты `upload.py` · `md2wiki.py` · `publish_index.py` · `relink.py` | REST по PAT, markdown → wiki-разметка |
 
 ## Цель и инварианты
 
@@ -28,6 +28,9 @@ description: >
 4. **Переименование — это правка заголовка**, а не пересоздание страницы.
 5. **`.md` создаются и правятся только в Obsidian** (правило vault'а); Confluence правится через
    `upload.py`. Реестр — служебный JSON скилла, не документация.
+6. **Переименование в vault — сначала правка реестра, потом прогон.** `obsidian move` меняет путь
+   файла, а запись реестра остаётся старой: прогон создаст дубль. Порядок и проверка — в
+   `confluence/notes.md`.
 
 ## Порядок работы
 

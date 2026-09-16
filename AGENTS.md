@@ -31,11 +31,11 @@
 
 | Репозиторий | Стек | Заметки |
 |---|---|---|
-| `energy-app-native` | Kotlin (KMP + Compose + Kaspresso, L1-L2) + Swift/XCUITest (iOS, L3) + Allure | локаторы — единый `testTag`-контракт |
-| `qa-monorepo` | Python: `pytest` + `httpx` + `pydantic` v2 + `allure-pytest` (+ `websocket-client`, `pika`) | backend black-box (API / контракты / E2E); уровень теста — маркер, не каталог |
+| `energy-app-native` | Kotlin (KMP + Compose, JUnit 5 + compose-test) + Swift/XCUITest (iOS) + Allure | уровни: component и component integration на общем коде, system на устройстве; локаторы — единый `testTag`-контракт |
+| `qa-monorepo` | Kotlin/JVM: JUnit 5 Jupiter + Allure | backend black-box (API / контракты / E2E над HTTP, WS, AMQP); уровень и тип теста — через `@Tag`, не каталог |
 | `auth_http` и др. Go-сервисы | Go: `net/http`, `httptest`, `testing`/testify | тесты сервиса изнутри |
 
-Default для QA-задачи: бэкенд/контракт → Python (`qa-monorepo`); экран/Compose → Kotlin (KMP);
+Default для QA-задачи: бэкенд/контракт → Kotlin/JUnit 5 (`qa-monorepo`); экран/Compose → Kotlin (KMP);
 iOS-специфика (клавиатура, secure-field, permissions) → Swift/XCUITest. Неясно — спроси.
 **Проектный instructions-файл репозитория главнее этого файла.**
 
