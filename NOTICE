@@ -16,6 +16,7 @@ Upstream-срез: 2ab9580 (2026-07-28)
                                   адаптирован, описание переведено)
   - diagnose                     (форк upstream engineering/diagnosing-bugs; переименован,
                                   адаптирован под vault-глоссарий вместо CONTEXT.md)
+  - grilling                     (upstream productivity/grilling, описание переведено)
 
 Оригинальная лицензия:
 
@@ -44,3 +45,105 @@ SOFTWARE.
 --------------------------------------------------------------------------------
 obsidian-vault — совпадает по имени с upstream personal/obsidian-vault, но
 переписан с нуля под two-tree LLM-Wiki (собственный контент, не производная).
+
+--------------------------------------------------------------------------------
+hardikpandya/stop-slop — https://github.com/hardikpandya/stop-slop
+Upstream-срез: срез 2026-10
+
+Производные skills в plugins/qa/skills/:
+  - stop-slop                    (дополнен разделом русских правил команды)
+
+Оригинальная лицензия:
+
+MIT License
+
+Copyright (c) 2025 Hardik Pandya
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+--------------------------------------------------------------------------------
+zjfls/zhoujie-claude-skills — https://github.com/zjfls/zhoujie-claude-skills
+Upstream-срез: 361ec81 (2026-02-11)
+
+Производные skills в plugins/qa/skills/:
+  - skill-system-analyst         (без изменений; static-assets/vendor содержит mermaid, d3,
+  -                                katex, markmap, highlight.js под их собственными лицензиями MIT/BSD)
+
+Оригинальная лицензия:
+
+MIT License
+
+Copyright (c) zjfls (лицензия MIT указана в README upstream)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+--------------------------------------------------------------------------------
+nimrodfisher/data-analytics-skills — https://github.com/nimrodfisher/data-analytics-skills
+Upstream-срез: 9449d36 (2026-09-25)
+
+Производные skills в plugins/qa/skills/:
+  - stakeholder-requirements-gathering
+  - data-quality-audit
+
+Оригинальная лицензия:
+
+MIT License
+
+Copyright (c) 2026 Nimrod Fisher
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+--------------------------------------------------------------------------------
+ITSalt/NaCl — https://github.com/ITSalt/NaCl (MIT, срез 20fe4c6, 2026-09-28)
+
+Код и тексты не копировались. Идеи пересказаны в разделах skills:
+  - service-doc   «Сверка описания с кодом» (по nacl-tl-reconcile)
+  - service-issue «Дефект после выпуска: где его пропустили» (по nacl-postmortem)

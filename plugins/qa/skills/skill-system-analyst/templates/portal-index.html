@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Analysis Portal</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+
+    <div class="layout-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-brand">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M21 16V8C20.9996 7.64927 20.9071 7.30481 20.7315 7.00116C20.556 6.69751 20.3037 6.44536 20 6.27L13 2.27C12.696 2.09446 12.3511 2.00205 12 2.00205C11.6489 2.00205 11.304 2.09446 11 2.27L4 6.27C3.69631 6.44536 3.44403 6.69751 3.26846 7.00116C3.09289 7.30481 3.00036 7.64927 3 8V16C3.00036 16.3507 3.09289 16.6952 3.26846 16.9988C3.44403 17.3025 3.69631 17.5546 4 17.73L11 21.73C11.304 21.9055 11.6489 21.9979 12 21.9979C12.3511 21.9979 12.696 21.9055 13 21.73L20 17.73C20.3037 17.5546 20.556 17.3025 20.7315 16.9988C20.9071 16.6952 20.9996 16.3507 21 16Z"
+                        stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                System Analyst
+            </div>
+
+            <!-- Navigation content injected by JS -->
+            <div id="nav-content">
+                <!-- Loaded by sidebar-loader.js -->
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header>
+                <div class="meta-info">
+                    <span class="meta-item">Project Docs</span>
+                </div>
+                <h1>Analyzed Systems Registry</h1>
+                <p>Overview of all deep-dive technical analysis documents generated for this project.</p>
+            </header>
+
+            <div id="dashboard-content">
+                <!-- Grid of documents will be rendered here -->
+                <div style="display: flex; justify-content: center; padding: 4rem;">
+                    Loading Registry...
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Logic to fetch manifest.json and render -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('manifest.json');
+                if (!response.ok) throw new Error("Manifest not found");
+                const manifest = await response.json();
+                renderDashboard(manifest);
+            } catch (e) {
+                console.error(e);
+                document.getElementById('dashboard-content').innerHTML = `
+                    <div class="callout danger">
+                        <h3>Registry Not Found</h3>
+                        <p>Could not load <code>manifest.json</code>. Has any analysis been generated yet?</p>
+                    </div>
+                `;
+            }
+        });
+
+        function renderDashboard(manifest) {
+            const container = document.getElementById('dashboard-content');
+
+            // Group docs by category
+            const grouped = {};
+            (manifest.categories || []).forEach(c => grouped[c] = []);
+            manifest.documents.forEach(doc => {
+                if (!grouped[doc.category]) grouped[doc.category] = [];
+                grouped[doc.category].push(doc);
+            });
+
+            let html = '';
+
+            for (const [category, docs] of Object.entries(grouped)) {
+                if (docs.length === 0) continue;
+
+                html += `<h2 style="margin-top: 3rem;">${category}</h2>`;
+                html += `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">`;
+
+                docs.forEach(doc => {
+                    html += `
+                        <a href="${doc.filepath}" style="text-decoration: none; color: inherit;">
+                            <div style="background: var(--card-bg); border: 1px solid var(--card-border); padding: 1.5rem; border-radius: 0.75rem; transition: transform 0.2s, background 0.2s; height: 100%;">
+                                <h3 style="margin-top: 0; font-size: 1.25rem; color: var(--accent-color);">${doc.title}</h3>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                    ${doc.summary || 'No summary provided.'}
+                                </p>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; font-size: 0.8rem; color: #64748b;">
+                                    <span>${new Date(doc.last_updated).toLocaleDateString()}</span>
+                                    <span class="badge">v${doc.version}</span>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                });
+
+                html += `</div>`;
+            }
+
+            container.innerHTML = html;
+        }
+    </script>
+    <script src="assets/js/sidebar-loader.js"></script>
+</body>
+
+</html>
