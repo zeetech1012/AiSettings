@@ -147,7 +147,9 @@ plugins/qa/                      ← плагин: skills + sub-agents
              service-issue (jira · xray, модель типов и ловушки инстанса)
              Контекст и диагностика: service-doc · occams-razor · code-to-wiki-docs
              kaspresso-single-test-diagnostician · obsidian-vault
-             Utils: git-guardrails-claude-code · write-a-skill · writing-great-skills
+             Требования и анализ: skill-system-analyst · stakeholder-requirements-gathering ·
+             data-quality-audit · grilling
+             Utils: git-guardrails-claude-code · write-a-skill · writing-great-skills · stop-slop
   agents/    project-researcher · go-service-explorer · frontend-contract-miner ·
              swagger-to-pydantic · repo-security-auditor · link-integrity-validator · scrum-master
 plugins/pm/                      ← плагин: PM-линия (добавлена 2026-08-21, обезличена 2026-08-31)
@@ -217,6 +219,9 @@ mcp/                             ← шаблон состава MCP (mcp.json) 
 | stop-slop | вычищает из прозы AI-клише — для доков, статей, баг-репортов | https://github.com/hardikpandya/stop-slop |
 | Anthropic-Cybersecurity-Skills | security-skills с привязкой к MITRE ATT&CK / NIST; Apache-2.0 | https://github.com/mukul975/Anthropic-Cybersecurity-Skills |
 | claude-handoff | `/handoff:create` · `/handoff:resume` — передача контекста между сессиями через `HANDOFF.md` | https://github.com/willseltzer/claude-handoff |
+| zhoujie-claude-skills | `skill-system-analyst`: анализ системы «сначала карта, потом главы», доказательства файл:строка | https://github.com/zjfls/zhoujie-claude-skills |
+| data-analytics-skills | 31 skill аналитика: требования, качество данных, EDA, сводки; в `qa` взяты два | https://github.com/nimrodfisher/data-analytics-skills |
+| NaCl | методология BA → SA → разработка на графе Neo4j; skills связаны и по одному не работают, взяты две идеи | https://github.com/ITSalt/NaCl |
 
 Паттерн **LLM-Wiki** (двухдеревная база знаний: ingest/query/lint поверх markdown вместо RAG) —
 первоисточник: gist Карпаты https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f
