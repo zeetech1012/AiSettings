@@ -114,6 +114,13 @@ def convert(md):
     while i < len(lines):
         ln = lines[i]
 
+        # CHANGED 2026-09-24: маркер списка вложений страницы. Файлы, приложенные к странице через REST, иначе
+        # видны только в меню «Вложения»; в Obsidian HTML-комментарий не отображается
+        if ln.strip() == "<!-- confluence:attachments -->":
+            out.append(_macro(macros, "{attachments:upload=false}"))
+            i += 1
+            continue
+
         # таблица: строка на | и следующая — разделитель
         if (ln.lstrip().startswith("|") and i + 1 < len(lines)
                 and re.match(r"^\s*\|[\s:|-]+\|\s*$", lines[i + 1])):
@@ -188,7 +195,9 @@ def convert(md):
     # \x01 и \x02 — временные маркеры настоящих ссылок, чтобы их скобки
     # не попали под общее экранирование ниже. В шаблоне replace такие
     # escape-последовательности не работают, поэтому только через лямбду.
-    text = re.sub(r"\[\[([^\]|]+)\|([^\]]+)\]\]",
+    # CHANGED 2026-09-23: внутри таблицы Obsidian требует [[цель\|подпись]]; без \\? хвостовой
+    # «\» оставался в цели, и ссылка в Confluence не разрешалась
+    text = re.sub(r"\[\[([^\]|\\]+)\\?\|([^\]]+)\]\]",
                   lambda m: "\x01" + m.group(2) + "|" + m.group(1) + "\x02", text)
     text = re.sub(r"\[\[([^\]]+)\]\]",
                   lambda m: "\x01" + m.group(1) + "\x02", text)

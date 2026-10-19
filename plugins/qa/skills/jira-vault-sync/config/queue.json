@@ -1,0 +1,24 @@
+{
+  "_comment": "Example only. Configure the project, field IDs, vault paths and condition registry before use.",
+  "jira_url": "https://jira.example.com",
+  "project": "DEMO",
+  "issue_types": [
+    "Задача",
+    "История"
+  ],
+  "label": "roadmap-qa",
+  "epics": [
+    "DEMO-1"
+  ],
+  "epic_link_field": "customfield_10108",
+  "exclude": {},
+  "vault_tasks_folder": "Company/_wiki/example-project/tasks",
+  "readme_path": "Company/_wiki/example-project/tasks/README.md",
+  "project_note": "example-project",
+  "executor_default": "сессия Claude Code в qa-monorepo",
+  "plans": {
+    "demo": "Example"
+  },
+  "registry": "~/example-project/coverage/conditions.json",
+  "conditions_map": "data/conditions-by-task.tsv"
+}

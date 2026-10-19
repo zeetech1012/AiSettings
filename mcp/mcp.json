@@ -76,6 +76,10 @@
     "idea": {
       "type": "http",
       "url": "http://127.0.0.1:64342/stream"
+    },
+    "pycharm": {
+      "type": "http",
+      "url": "http://127.0.0.1:<PYCHARM_MCP_PORT>/stream"
     }
   }
 }

@@ -1,0 +1,30 @@
+{
+  "_comment": "Example only. Tests are selected from the shared test repository; plan and execution belong to the release project.",
+  "project": "DEMO",
+  "version": {
+    "name": "Firmware 1.0.0",
+    "description": "Changes from the release notes"
+  },
+  "plan": "DEMO-1",
+  "assignee": "example-user",
+  "tests": [
+    "TESTS-1"
+  ],
+  "execution": {
+    "summary": "[TX] [Device] firmware 1.0.0",
+    "revision": "1.0.0",
+    "environments": [
+      "lab"
+    ],
+    "components": [
+      "Device"
+    ],
+    "firmware_file": "~/Downloads/firmware.bin",
+    "description": "Firmware {file}; SHA-256 {sha256}"
+  },
+  "links": {
+    "DEMO-2": [
+      "TESTS-1"
+    ]
+  }
+}

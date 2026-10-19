@@ -21,8 +21,7 @@ TOKEN = open(os.path.expanduser("~/confluence_pat"), encoding="utf-8").read().st
 VAULT = os.path.expanduser("~/Documents/Obsidian Vault")
 HERE = os.path.dirname(os.path.abspath(__file__))
 REGISTRY = os.path.join(HERE, "registry.json")
-FOOTER = ("\n----\n{{info}}\nИсточник: {{{{{path}}}}} в Obsidian-vault. "
-          "Страница выгружена автоматически, правки вносить в источник.\n{{info}}\n")
+FOOTER = ""   # CHANGED 2026-09-24: без плашки о локальном источнике (см. upload.py)
 
 
 def api(method, path, payload=None):

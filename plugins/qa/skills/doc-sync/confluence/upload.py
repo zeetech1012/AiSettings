@@ -37,13 +37,13 @@ MD2WIKI = os.path.join(HERE, "md2wiki.py")
 REGISTRY = os.path.join(HERE, "registry.json")
 TOKEN = open(os.path.expanduser("~/confluence_pat"), encoding="utf-8").read().strip()
 
-FOOTER = ("\n----\n{{info}}\nИсточник: {{{{{path}}}}} в Obsidian-vault. "
-          "Страница выгружена автоматически, правки вносить в источник.\n{{info}}\n")
+# CHANGED 2026-09-24 (решение владельца): на страницах не указывается локальное расположение источника —
+# ни пути в vault, ни «правки вносить в источник». Правило о том, что источник — vault, живёт в SKILL.md.
+FOOTER = ""
 
 BROKEN = []  # (файл, номер блока, ошибка) — невалидный mermaid в исходниках
 
-SECTION_BODY = ("{{info}}\nРаздел соответствует каталогу {{{{{path}}}}} "
-                "в Obsidian-vault. Содержимое — в дочерних страницах.\n{{info}}\n")
+SECTION_BODY = "{{children}}\n"   # CHANGED 2026-09-24: вместо плашки о каталоге vault — список дочерних страниц
 
 TOC = "{toc:maxLevel=2|minLevel=2}"
 TOC_MIN_SECTIONS = 6
@@ -67,6 +67,14 @@ def api(method, path, payload=None):
 def md2wiki(path, title_only=False):
     cmd = [sys.executable, MD2WIKI] + (["--title"] if title_only else []) + [path]
     return subprocess.run(cmd, capture_output=True, text=True, check=True).stdout
+
+
+# CHANGED 2026-10-08: registry.pins — pageId -> {space, parentPageId}. Страница, перенесённая
+# в другое пространство (WQA), остаётся в файле своего проекта, но выгружается туда, где лежит:
+# REST DC не меняет пространство существующей страницы (HTTP 400), а родитель из дерева vault
+# вернул бы её на прежнее место.
+PINS = (json.load(open(REGISTRY, encoding="utf-8")).get("pins", {})
+        if os.path.exists(REGISTRY) else {})
 
 
 def load_linkmap():
@@ -95,8 +103,10 @@ def load_linkmap():
             # а Obsidian пишет пути ссылок в NFC: без нормализации любая цель с «й»
             # или «ё» не находится, и в Confluence уезжает ссылка на несуществующий
             # заголовок (найдено 2026-08-21 на «13 Настройки», «Централизованный портал»).
+            # CHANGED 2026-10-08: закреплённая страница живёт в пространстве закрепления
+            space = PINS.get(str(m.get("pageId")), {}).get("space") or proj.get("space")
             for key in {full, full[:-3] if full.endswith(".md") else full}:
-                out[unicodedata.normalize("NFC", key)] = (title, proj.get("space"))
+                out[unicodedata.normalize("NFC", key)] = (title, space)
     return out
 
 
@@ -135,6 +145,40 @@ def resolve_links(text):
     return text
 
 
+CHILDREN = "{children:excerptType=simple}"
+CHILDREN_HEADING = "h2. Страницы раздела"
+
+
+def add_lead_excerpt(body):
+    """CHANGED 2026-09-30: первая фраза выноски в начале страницы становится выдержкой {excerpt}.
+
+    Выдержку показывает макрос дочерних страниц на родительской странице. Выноска
+    `> …` в vault стоит первой строкой статьи; md2wiki отдаёт её блоком {quote}.
+    Страница без такой выноски не меняется."""
+    m = re.match(r"(\s*\{quote\}\n)(.+?[.!?])(?=\s|\n)", body, flags=re.S)
+    if not m or "{excerpt}" in body or "\n" in m.group(2):
+        return body
+    return body[:m.start(2)] + "{excerpt}" + m.group(2) + "{excerpt}" + body[m.end(2):]
+
+
+def add_children(body):
+    """CHANGED 2026-09-30: пустой раздел «Страницы раздела» получает макрос дочерних страниц с выдержками.
+
+    Разметку Confluence в markdown не пишем (md2wiki экранирует фигурные скобки),
+    поэтому список дочерних страниц ставится при выгрузке, как оглавление."""
+    lines = body.split("\n")
+    for n, ln in enumerate(lines):
+        if ln.strip() != CHILDREN_HEADING:
+            continue
+        rest = lines[n + 1:]
+        nxt = next((k for k, x in enumerate(rest) if x.startswith("h2. ")), len(rest))
+        if any(x.strip() for x in rest[:nxt]):
+            return body
+        lines[n + 1:n + 1] = ["", CHILDREN]
+        return "\n".join(lines)
+    return body
+
+
 def add_toc(body):
     """Ставит оглавление перед первым разделом длинной страницы.
 
@@ -142,6 +186,7 @@ def add_toc(body):
     рисует сама Obsidian, засорять markdown разметкой Confluence нечем.
     Третий уровень не берём — там отдельные поля и сообщения, будет шум.
     """
+    body = add_children(add_lead_excerpt(body))  # CHANGED 2026-09-30: выдержка и дочерние страницы
     lines = body.split("\n")
     heads = [n for n, ln in enumerate(lines) if ln.startswith("h2. ")]
     if len(heads) < TOC_MIN_SECTIONS:
@@ -165,6 +210,9 @@ def upsert(space, title, body, parent_id, dry=False, known_id=None):
     # CHANGED 2026-09-04: сначала страница из registry по id, потом поиск по заголовку.
     # Заголовки детей стали короткими («Архитектура (auth_http)»); поиск по заголовку
     # первым мог найти чужую страницу с таким же именем и перезаписать её.
+    pin = PINS.get(str(known_id)) if known_id else None
+    if pin:  # CHANGED 2026-10-08: закреплённая страница — своё пространство и родитель
+        space, parent_id = pin["space"], pin["parentPageId"]
     existing = None
     if known_id:
         try:
@@ -273,7 +321,7 @@ def make_title(prefix, base, used, fname, code=None, is_root=False):
     # «Тема (код)», где код берётся из скобок ближайшей шапки (проекта или подраздела).
     # Полный префикс в детях не повторяется (решение владельца 2026-09-04); код нужен,
     # потому что заголовок уникален в пространстве, а «Архитектура» есть у каждого сервиса.
-    # Шапка без кода (например «Платформа: контуры») — дети без хвоста.
+    # Шапка без кода (например «Платформа company: контуры») — дети без хвоста.
     if is_root:
         # H1 корневого README, начинающийся с ключа реестра, остаётся заголовком целиком
         # («Jira — как устроены проекты…»); иначе заголовок = ключ («Авторизация (auth_http)»)

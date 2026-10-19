@@ -1,6 +1,6 @@
 ---
 name: write-a-skill
-description: Создаёт новые навыки агента с правильной структурой, progressive disclosure и встроенными ресурсами. Используй, когда пользователь хочет создать, написать или собрать новый навык.
+description: Create new agent skills with proper structure, progressive disclosure, and bundled resources. Use when user wants to create, write, or build a new skill.
 ---
 
 # Writing Skills

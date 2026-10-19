@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Урок 1 — KMP Test Architecture: где что гонять</title>
+<style>
+  :root{
+    --ink:#1a1c20; --muted:#5b6470; --line:#e3e6ea; --bg:#fbfcfd; --card:#fff;
+    --accent:#6750a4; --accent-soft:#efeaf8; --green:#1b7f4b; --green-soft:#e7f4ec;
+    --amber:#9a6a00; --amber-soft:#fbf2dc; --code:#0b3b6f; --code-bg:#f1f5fb;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  .wrap{max-width:820px;margin:0 auto;padding:40px 22px 80px}
+  header.lead{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:30px}
+  .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  h1{font-size:30px;line-height:1.15;margin:8px 0 10px}
+  .meta{color:var(--muted);font-size:13.5px}
+  .meta b{color:var(--ink)}
+  h2{font-size:21px;margin:38px 0 12px;padding-top:8px}
+  h3{font-size:16px;margin:22px 0 6px}
+  p{margin:11px 0}
+  code{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.88em;
+    background:var(--code-bg);color:var(--code);padding:1px 5px;border-radius:4px}
+  .mission{background:var(--accent-soft);border-radius:10px;padding:14px 18px;font-size:14.5px;margin:0 0 8px}
+  .mission b{color:var(--accent)}
+  .diagram{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin:18px 0;
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:13px;line-height:1.5;overflow-x:auto}
+  .diagram .n{color:var(--accent);font-weight:700}
+  .diagram .t{color:var(--green)}
+  .diagram .c{color:var(--muted)}
+  table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:#f4f6f8;font-size:12.5px;letter-spacing:.02em;text-transform:uppercase;color:var(--muted)}
+  td code{white-space:nowrap}
+  .truth{border-left:4px solid var(--accent);background:var(--card);border:1px solid var(--line);
+    border-left-width:4px;border-radius:8px;padding:12px 16px;margin:14px 0}
+  .truth b{color:var(--accent)}
+  .quiz{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:16px 0}
+  .quiz .q{font-weight:600;margin-bottom:8px}
+  .quiz button{font:inherit;font-size:13px;cursor:pointer;background:var(--accent);color:#fff;border:0;
+    border-radius:7px;padding:7px 14px;margin-top:4px}
+  .quiz button:hover{filter:brightness(1.07)}
+  .answer{display:none;margin-top:12px;background:var(--green-soft);border-radius:8px;padding:12px 14px;font-size:14px}
+  .answer.show{display:block}
+  .answer .lbl{color:var(--green);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+  .ask{background:var(--amber-soft);border-radius:10px;padding:14px 18px;margin:30px 0 0;font-size:14.5px}
+  .ask b{color:var(--amber)}
+  .src{margin-top:34px;border-top:1px solid var(--line);padding-top:16px;font-size:13px;color:var(--muted)}
+  .src a{color:var(--accent)}
+  .src li{margin:4px 0}
+  sup a{color:var(--accent);text-decoration:none;font-weight:700}
+  .pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;background:var(--accent-soft);color:var(--accent);font-weight:700}
+  @media print{body{background:#fff}.quiz button{display:none}.answer{display:block}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="lead">
+  <div class="kicker">Урок 1 · KMP Mobile Testing</div>
+  <h1>Тест-архитектура KMP: где что гонять</h1>
+  <div class="meta">⏱ ~6 мин · <b>ZPD:</b> продвинутый · <b>Цель урока:</b> одна чёткая ментальная модель — какой <b>source set</b> для какого теста и на каком <b>таргете</b> он исполняется.</div>
+</header>
+
+<div class="mission"><b>Зачем (миссия):</b> карьера/широта — уметь спроектировать тест-стратегию <i>любого</i> KMP-проекта, а не одного. Этот урок даёт каркас, на который дальше навесим инструменты (Kaspresso / XCUITest / Allure).</div>
+
+<h2>1. Каркас: тесты живут в source sets, исполняются на targets</h2>
+<p>В KMP есть два независимых измерения, которые новички путают:</p>
+<ul>
+  <li><b>Source set</b> — <i>где лежит код теста</i> (<code>commonTest</code>, <code>androidUnitTest</code>, <code>iosTest</code>…).</li>
+  <li><b>Target</b> — <i>что его компилирует и исполняет</i> (JVM-хост, Android-устройство, iOS-симулятор/Native).</li>
+</ul>
+<p>Ключевой факт: <b><code>commonTest</code> компилируется во ВСЕ объявленные таргеты</b> и гоняется на каждом — это «контртест» к <code>commonMain</code>.<sup><a href="#s1">[1]</a></sup> Платформенные тесты живут в своих source sets и гоняются только на своём таргете.<sup><a href="#s4">[4]</a></sup></p>
+
+<div class="diagram">
+<span class="c">// source set         → на каком(их) target(ах) исполняется</span>
+<span class="n">commonTest</span>          → <span class="t">JVM-хост + iOS(Native) + …</span>  <span class="c"># общая логика, kotlin.test</span>
+<span class="n">androidUnitTest</span>     → <span class="t">JVM-хост</span>             <span class="c"># быстро, без устройства (Robolectric/моки)</span>
+<span class="n">androidInstrumentedTest</span> → <span class="t">Android device/эмулятор</span> <span class="c"># Espresso/Kaspresso, реальный UI</span>
+<span class="n">iosTest</span>             → <span class="t">iOS-симулятор (Native)</span>  <span class="c"># compose.uiTest / Native unit</span>
+<span class="n">jvmTest / desktopTest</span> → <span class="t">JVM-хост</span>             <span class="c"># если есть desktop-таргет</span>
+</div>
+
+<h2>2. Три вопроса, выбирающих слой</h2>
+<p>Чтобы решить, куда положить тест, спроси по порядку:</p>
+<ol>
+  <li><b>Это чистая логика</b> (ViewModel/UseCase/mapper/валидация), без платформенных API? → <code>commonTest</code>. Только мультиплатформенные библиотеки (<code>kotlin.test</code>, coroutines-test, Turbine).<sup><a href="#s1">[1]</a></sup></li>
+  <li><b>Это платформо-специфичное поведение или нужен платформенный рантайм</b> (Android Context, реальный JVM-хост, Native)? → платформенный unit source set (<code>androidUnitTest</code> / <code>iosTest</code> / <code>jvmTest</code>).</li>
+  <li><b>Это UI</b>? → зависит от того, <i>shared</i> ли он (Compose Multiplatform) и нужен ли реальный девайс — см. таблицу.</li>
+</ol>
+
+<h2>3. Таблица решений</h2>
+<table>
+  <thead><tr><th>Хочу протестировать</th><th>Source set</th><th>Инструмент</th><th>Исполняется на</th></tr></thead>
+  <tbody>
+    <tr><td>ViewModel / UseCase / mapper / правила валидации</td><td><code>commonTest</code></td><td><code>kotlin.test</code> + coroutines-test + Turbine</td><td>все таргеты (обычно гоняешь на JVM-хосте — быстро)</td></tr>
+    <tr><td>Shared Compose-экран/компонент (логика UI, без живого backend)</td><td><code>commonTest</code>/<code>iosTest</code></td><td><code>runComposeUiTest</code> (ComposeUiTest receiver)<sup><a href="#s2">[2]</a></sup></td><td>каждый таргет: Android, iOS-сим, desktop</td></tr>
+    <tr><td>Android-функционал/E2E на устройстве (навигация, реальный рендер)</td><td><code>androidInstrumentedTest</code></td><td>Espresso / <b>Kaspresso</b> (+compose-support)</td><td>Android device/эмулятор</td></tr>
+    <tr><td>iOS-специфика (системная клавиатура, accessibility, реальный девайс)</td><td>отд. таргет в Xcode</td><td><b>XCUITest</b> (Swift)</td><td>iOS device/симулятор</td></tr>
+    <tr><td>Платформенная реализация <code>expect/actual</code></td><td>platform unit set</td><td><code>kotlin.test</code></td><td>соответствующий таргет</td></tr>
+  </tbody>
+</table>
+
+<h2>4. Три неочевидные истины</h2>
+<div class="truth"><b>commonTest бежит и на Native.</b> Тот же тест ViewModel исполняется на JVM-хосте И на iOS-симуляторе. Поэтому в <code>commonTest</code> — только мультиплатформенные библиотеки; никакого JVM-only (MockK, Robolectric, java.*).<sup><a href="#s1">[1]</a></sup></div>
+<div class="truth"><b>Compose-UI-тест ≠ unit-тест.</b> <code>runComposeUiTest</code> НЕ использует JUnit <code>TestRule</code> — ты вызываешь функцию и работаешь с <code>ComposeUiTest</code>-receiver'ом; finders/matchers/actions те же, что в Jetpack Compose.<sup><a href="#s2">[2]</a></sup> Это причина держать <code>compose.uiTest</code> в <code>iosTest</code>/платформенном set'е, а не в <code>commonTest</code> — иначе Compose-runtime утечёт в JVM-host unit (где нет Robolectric). <span class="pill">так и сделано в energy-app-native</span></div>
+<div class="truth"><b>API эволюционирует — знай актуальное.</b> Compose Multiplatform <b>1.11</b> ввёл <b>v2 ComposeUiTest</b> на non-Android таргетах со <code>StandardTestDispatcher</code> по умолчанию (вместо Unconfined → корутины в порядке очереди, стабильнее), а старые <code>runComposeUiTest</code>/<code>runSkikoComposeUiTest</code> задепрекейтил.<sup><a href="#s5">[5]</a></sup> С 1.9 <code>runComposeUiTest</code> принимает suspend-лямбду (<code>awaitIdle()</code>).</div>
+
+<h2>5. Проверь себя <span class="pill">feedback loop</span></h2>
+<p>Для каждого сценария реши слой/инструмент, потом раскрой ответ.</p>
+
+<div class="quiz">
+  <div class="q">Q1. Тест: «валидатор телефона отклоняет буквы». Куда?</div>
+  <button onclick="document.getElementById('a1').classList.add('show')">Показать ответ</button>
+  <div class="answer" id="a1"><span class="lbl">Ответ</span><br><code>commonTest</code> + <code>kotlin.test</code>. Чистая логика, без платформы → общий слой, гоняется на всех таргетах. Гоняешь обычно на JVM-хосте (быстро).</div>
+</div>
+
+<div class="quiz">
+  <div class="q">Q2. Тест: «на shared Compose-форме ввод нечислового ID оставляет кнопку Add disabled». Backend не нужен. Куда?</div>
+  <button onclick="document.getElementById('a2').classList.add('show')">Показать ответ</button>
+  <div class="answer" id="a2"><span class="lbl">Ответ</span><br><code>runComposeUiTest</code> в <code>commonTest</code>/<code>iosTest</code>. UI shared (Compose MP), без живого backend → один тест на все платформы, локаторы по <code>testTag</code>/semantics. Не нужен ни Kaspresso, ни XCUITest.</div>
+</div>
+
+<div class="quiz">
+  <div class="q">Q3. Хочешь использовать MockK и Robolectric в тесте ViewModel. Можно ли положить его в <code>commonTest</code>?</div>
+  <button onclick="document.getElementById('a3').classList.add('show')">Показать ответ</button>
+  <div class="answer" id="a3"><span class="lbl">Ответ</span><br><b>Нет.</b> MockK/Robolectric — JVM-only; <code>commonTest</code> компилируется и под Native → не соберётся. Либо клади в <code>androidUnitTest</code> (JVM-хост), либо пиши ручные fakes (<code>expect/actual</code>) и оставляй в <code>commonTest</code>.</div>
+</div>
+
+<div class="quiz">
+  <div class="q">Q4. Тест: «на реальном iPhone системная клавиатура закрывается по тапу вне поля» (HOME-7-подобное). Куда?</div>
+  <button onclick="document.getElementById('a4').classList.add('show')">Показать ответ</button>
+  <div class="answer" id="a4"><span class="lbl">Ответ</span><br><b>XCUITest</b> (Swift), iOS-специфика. Системная клавиатура/фокус — это поведение ОС, которое Compose-UI-тест в процессе не ловит; нужен нативный драйвер на устройстве/симуляторе. (Кросс-платформенную UI-логику оставляем в <code>runComposeUiTest</code>.)</div>
+</div>
+
+<div class="quiz">
+  <div class="q">Q5. Один и тот же тест ViewModel ты гоняешь и на JVM-хосте, и на iOS-симуляторе. Это баг конфигурации или норма?</div>
+  <button onclick="document.getElementById('a5').classList.add('show')">Показать ответ</button>
+  <div class="answer" id="a5"><span class="lbl">Ответ</span><br><b>Норма.</b> <code>commonTest</code> по дизайну компилируется и исполняется на КАЖДОМ объявленном таргете — это бесплатная регрессия-гарантия, что общая логика ведёт себя одинаково на JVM и Native.<sup><a href="#s1">[1]</a></sup></div>
+</div>
+
+<div class="ask"><b>Я — твой преподаватель.</b> Спрашивай что угодно по этому уроку: «а где тогда интеграционные тесты с Ktor MockEngine?», «почему именно <code>iosTest</code>, а не <code>iosMain</code>?», «как v2 ComposeUiTest меняет мои текущие тесты?» — разберём.</p></div>
+
+<div class="src">
+  <b>Источники</b>
+  <ul style="list-style:none;padding:0">
+    <li id="s1">[1] <a href="https://kotlinlang.org/docs/multiplatform/multiplatform-run-tests.html">Test your multiplatform app — kotlinlang.org</a> (commonTest, kotlin.test, все таргеты)</li>
+    <li id="s2">[2] <a href="https://kotlinlang.org/docs/multiplatform/compose-test.html">Testing Compose Multiplatform UI — kotlinlang.org</a> (runComposeUiTest, ComposeUiTest receiver)</li>
+    <li id="s3">[3] <a href="https://kotlinlang.org/docs/multiplatform/multiplatform-discover-project.html">KMP project structure — kotlinlang.org</a> (source sets / targets)</li>
+    <li id="s4">[4] <a href="https://kotlinlang.org/docs/multiplatform/multiplatform-android-layout.html">Android source set layout — kotlinlang.org</a> (androidUnitTest vs androidInstrumentedTest)</li>
+    <li id="s5">[5] <a href="https://blog.jetbrains.com/kotlin/2026/05/compose-multiplatform-1-11-0/">Compose Multiplatform 1.11.0 — JetBrains blog</a> (v2 ComposeUiTest, StandardTestDispatcher)</li>
+  </ul>
+</div>
+
+</div>
+</body>
+</html>
