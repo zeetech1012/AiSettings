@@ -8,14 +8,32 @@
     {
       "name": "qa",
       "description": "Командные skills (тесты, ревью, диагностика, документация из кода) + исследовательские sub-agents",
-      "version": "0.12.0",
+      "version": "0.13.0",
       "source": "./plugins/qa"
     },
     {
       "name": "pm",
       "description": "PM-линия: Atlassian-скиллы, sprint/portfolio-аналитика, comms, agent-harness + cs-оркестрация",
-      "version": "0.1.2",
+      "version": "0.2.0",
       "source": "./plugins/pm"
+    },
+    {
+      "name": "dev",
+      "description": "Engineering workflows, handoff and client configuration skills",
+      "version": "0.1.0",
+      "source": "./plugins/dev"
+    },
+    {
+      "name": "analytics",
+      "description": "Data analysis, quality, metrics and reporting skills",
+      "version": "0.1.0",
+      "source": "./plugins/analytics"
+    },
+    {
+      "name": "media",
+      "description": "HyperFrames video, animation, audio and media workflows",
+      "version": "0.1.0",
+      "source": "./plugins/media"
     }
   ]
 }

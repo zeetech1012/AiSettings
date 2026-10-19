@@ -1,0 +1,910 @@
+{
+  "snapshot": "2026-10-19",
+  "skills": [
+    {
+      "name": "a11y-debugging",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "ab-test-analysis",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "agent-harness",
+      "plugin": "pm",
+      "source": "local"
+    },
+    {
+      "name": "allure-annotate",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "allure-publish",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "allure-to-obsidian",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "analysis-assumptions-log",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "analysis-documentation",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "analysis-planning",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "analysis-qa-checklist",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "analysis-retrospective",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "ask-matt",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "atlassian-admin",
+      "plugin": "pm",
+      "source": "local"
+    },
+    {
+      "name": "atlassian-templates",
+      "plugin": "pm",
+      "source": "local"
+    },
+    {
+      "name": "awesome-list-manager",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "babysit",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "brag",
+      "plugin": "media",
+      "source": "local"
+    },
+    {
+      "name": "business-metrics-calculator",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "canvas",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "caveman",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "chrome-devtools",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "chrome-devtools-cli",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "claude-automation-recommender",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "code-simplifier",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "code-to-wiki-docs",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "codebase-design",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "cohort-analysis",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "compose-testtag-injector",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "confluence-expert",
+      "plugin": "pm",
+      "source": "local"
+    },
+    {
+      "name": "context-packager",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "create-hook",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "create-openapi",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "create-rule",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "create-skill",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "create-subagent",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "cs-grill-pm",
+      "plugin": "pm",
+      "source": "local"
+    },
+    {
+      "name": "cs-harness",
+      "plugin": "pm",
+      "source": "local"
+    },
+    {
+      "name": "cs-pm",
+      "plugin": "pm",
+      "source": "local"
+    },
+    {
+      "name": "cs-pm-loop",
+      "plugin": "pm",
+      "source": "local"
+    },
+    {
+      "name": "dashboard-specification",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "data-catalog-entry",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "data-narrative-builder",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "data-quality-audit",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "debug-optimize-lcp",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "design-an-interface",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "diagnose",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "doc-sync",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "domain-modeling",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "edit-article",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "embedded-captions",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "evaluate-repository",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "executive-summary-generator",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "faceless-explainer",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "figma",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "frontend-contract-miner",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "funnel-analysis",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "general-video",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "git-guardrails-claude-code",
+      "plugin": "qa",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "github-issue-ops",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "go-service-explorer",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "grill-me",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "grill-with-docs",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "grilling",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "handoff",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "handoff-create",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "handoff-plugin",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "handoff-quick",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "handoff-resume",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "hw-firmware-release",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "hyperframes",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "hyperframes-animation",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "hyperframes-audio",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "hyperframes-cli",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "hyperframes-core",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "hyperframes-creative",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "hyperframes-keyframes",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "hyperframes-registry",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "hyperframes-studio",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "i-have-adhd",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "impact-quantification",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "implement",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "improve-codebase-architecture",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "insight-synthesis",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "jira-expert",
+      "plugin": "pm",
+      "source": "local"
+    },
+    {
+      "name": "jira-vault-sync",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "kaspresso-compose-qa-guru",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "kaspresso-log-investigator",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "kaspresso-single-test-diagnostician",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "kmp-fake-koin-module",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "kmp-multi-transport-architecture",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "kmp-navigation-troubleshooter",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "kmp-unit-coverage",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "link-integrity-validator",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "media-use",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "meeting-analyzer",
+      "plugin": "pm",
+      "source": "local"
+    },
+    {
+      "name": "memory-leak-debugging",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "methodology-explainer",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "metric-reconciliation",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "migrate-to-shoehorn",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "migrate-to-skills",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "motion-graphics",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "music-to-video",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "new-page-object",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "no-ai-slop",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "obsidian-vault",
+      "plugin": "qa",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "occams-razor",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "peer-review-template",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "pm-skills",
+      "plugin": "pm",
+      "source": "local"
+    },
+    {
+      "name": "pr-to-video",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "product-launch-video",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "programmatic-eda",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "project-researcher",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "project-tree-documenter",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "prototype",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "qa",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "qa-architect",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "query-validation",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "remotion-to-hyperframes",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "repo-security-auditor",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "request-refactor-plan",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "research",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "resolving-merge-conflicts",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "review",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "review-test",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "root-cause-investigation",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "scaffold-exercises",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "schema-mapper",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "scrum-master",
+      "plugin": "pm",
+      "source": "local"
+    },
+    {
+      "name": "sdk",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "segmentation-analysis",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "semantic-model-builder",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "senior-pm",
+      "plugin": "pm",
+      "source": "local"
+    },
+    {
+      "name": "service-doc",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "service-issue",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "setup-matt-pocock-skills",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "setup-pre-commit",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "shell",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "skill-system-analyst",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "slideshow",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "split-to-prs",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "sql-to-business-logic",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "stakeholder-requirements-gathering",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "statusline",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "stop-slop",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "svg-dashboard-generator",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "swagger-to-pydantic",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "talking-head-recut",
+      "plugin": "media",
+      "source": "heygen-com/hyperframes"
+    },
+    {
+      "name": "tdd",
+      "plugin": "qa",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "teach",
+      "plugin": "qa",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "team-communications",
+      "plugin": "pm",
+      "source": "local"
+    },
+    {
+      "name": "technical-to-business-translator",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "test-case-generator",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "time-series-analysis",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "to-issues",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "to-prd",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "to-spec",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "to-tickets",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "triage",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "troubleshooting",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "ubiquitous-language",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "understand",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "understand-chat",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "understand-dashboard",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "understand-diff",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "understand-domain",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "understand-explain",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "understand-knowledge",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "understand-onboard",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "update-cli-config",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "update-cursor-settings",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "visualization-builder",
+      "plugin": "analytics",
+      "source": "local"
+    },
+    {
+      "name": "wayfinder",
+      "plugin": "dev",
+      "source": "local"
+    },
+    {
+      "name": "write-a-skill",
+      "plugin": "qa",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "write-test",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "writing-beats",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "writing-fragments",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "writing-great-skills",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "writing-shape",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    },
+    {
+      "name": "xray-bulk-edit",
+      "plugin": "qa",
+      "source": "local"
+    },
+    {
+      "name": "zoom-out",
+      "plugin": "dev",
+      "source": "mattpocock/skills"
+    }
+  ],
+  "excluded": {
+    "huly-doc-sync": "retired transport",
+    "huly-service-issue": "retired transport",
+    "docmost-qa-strategy": "retired transport"
+  }
+}

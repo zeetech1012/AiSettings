@@ -9,14 +9,12 @@
 Заменяет второй прогон upload.py после переименований: один PUT на страницу с битой ссылкой вместо
 перевыгрузки всех проектов (2026-09-04: 53 страницы, 164 ссылки, ноль перевыгрузок).
 """
-import json, os, re, sys, urllib.request, urllib.parse, html
-HERE = os.path.dirname(os.path.abspath(__file__))
-PAT = open(os.path.expanduser("~/confluence_pat"), encoding="utf-8").read().strip()
+import json, re, sys, urllib.request, urllib.parse, html
+PAT = open("~/confluence_pat").read().strip()
 C = "https://confluence.example.com"
-REG = os.path.join(HERE, "registry.json")
+REG = "~/.claude/skills/doc-sync/confluence/registry.json"
 BAK = next(a for a in sys.argv[1:] if not a.startswith("--"))  # путь к бэкапу реестра
-SPACES = sorted({p["space"] for p in json.load(open(REG, encoding="utf-8"))["projects"].values()
-                 if p.get("space")})   # пространства берутся из реестра
+SPACES = ["API", "LK", "WH", "WAV", "PROD"]
 EXTRA = {}  # {"старый заголовок": "новый"} для страниц вне реестра; после прогона очистить
 APPLY = "--apply" in sys.argv
 

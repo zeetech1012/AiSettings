@@ -1,6 +1,6 @@
 # AiSettings — общие настройки AI-клиентов
 
-Один источник командных правил, QA/PM skills и состава MCP для **Claude Code, Codex,
+Один источник командных правил, QA/PM, engineering, analytics и media skills и состава MCP для **Claude Code, Codex,
 Antigravity CLI (`agy`), Qwen Code и OpenCode**. Exporter готовит нативные конфиги из
 общих исходников; установщик показывает изменения и защищает личные файлы от перезаписи.
 Claude marketplace остаётся отдельным способом доставки тех же skills и sub-agents.
@@ -83,7 +83,7 @@ MCP подключается отдельным выбором компонен�
 
 Пределы поддержки:
 
-- Claude получает 20 skills, Codex/Qwen — 19, agy/OpenCode — 18. Состав пересчитывается при
+- Claude получает 180 skills, Codex/Qwen — 179, agy/OpenCode — 178. Состав пересчитывается при
   экспорте и записывается в manifest. `git-guardrails-claude-code` исключён вне Claude;
   `writing-great-skills` исключён для agy/OpenCode, поскольку там не подтверждено соблюдение
   его запрета на неявный вызов. В Codex этот запрет задан `agents/openai.yaml`.
@@ -112,6 +112,9 @@ MCP подключается отдельным выбором компонен�
 /plugin marketplace add zeetech1012/AiSettings
 /plugin install qa@ai-settings
 /plugin install pm@ai-settings
+/plugin install dev@ai-settings
+/plugin install analytics@ai-settings
+/plugin install media@ai-settings
 ```
 
 Для Claude выбери один способ доставки skills: marketplace или прямую установку exporter'ом.
@@ -161,6 +164,30 @@ plugins/pm/                      ← плагин: PM-линия (добавле
 mcp/                             ← шаблон состава MCP (mcp.json) + что подставить лично (README.md)
 ```
 
+Срез самостоятельных skills от **2026-10-19**:
+
+| Плагин | Версия | Skills | Состав |
+|---|---|---|---|
+| `qa` | 0.13.0 | 59 | тестирование, контракты, Allure/Xray, документация, DevTools и codegraph |
+| `pm` | 0.2.0 | 14 | Atlassian, delivery, коммуникации и cs-оркестрация |
+| `dev` | 0.1.0 | 56 | инженерные workflows, handoff, настройки клиентов и тексты |
+| `analytics` | 0.1.0 | 29 | EDA, метрики, сегментация, отчёты и проверка анализа |
+| `media` | 0.1.0 | 22 | HyperFrames: видео, анимация, аудио и медиа |
+
+Имена и происхождение — в `config/skill-catalog.json`. Архивные процедуры Huly/Docmost,
+plugin-кэши, локальные реестры страниц, данные Jira и резервные копии в поставку не входят.
+`jira-vault-sync/config/queue.json` и `hw-firmware-release/release.example.json` — примеры,
+их параметры нужно заменить перед применением.
+
+Skills, привязанные к runtime (`canvas`, `sdk`, `create-hook`, `statusline` и настройки клиента),
+сохранены как установлены; их экспорт не подтверждает наличие нужных API в каждом клиенте.
+В частности, пути `.cursor` и пакет `@cursor/sdk` требуют соответствующего runtime.
+Внешние CLI, MCP, providers и зависимости скриптов устанавливаются отдельно.
+
+В `brag` не поставляются музыкальные файлы без точных условий распространения: выбрать
+лицензированный трек через `media-use` или передать свой. Телеметрия `media-use` по умолчанию
+отключена; для подключения своего проекта PostHog задать `MEDIA_USE_TELEMETRY_KEY`.
+
 ## Три корзины (что здесь, чего здесь нет)
 
 | Корзина | Где живёт |
@@ -185,7 +212,7 @@ mcp/                             ← шаблон состава MCP (mcp.json) 
 | `obsidian` | плагин Obsidian «Local REST API with MCP» (v4+, HTTPS :27124, endpoint `/mcp/`) | https://github.com/coddingtonbear/obsidian-local-rest-api |
 | `gradle` (опц.) | `gradle-mcp` (uv) | локальный сервер — путь в `mcp/README.md` |
 | `allure` (опц.) | `mcp-allure` (uv) | локальный сервер — путь в `mcp/README.md` |
-| `idea` (опц.) | встроенный MCP-сервер JetBrains IDE (HTTP `127.0.0.1`) | https://www.jetbrains.com/help/idea/mcp-server.html |
+| `idea` / `pycharm` (опц.) | встроенный MCP-сервер JetBrains IDE (HTTP `127.0.0.1`) | https://www.jetbrains.com/help/idea/mcp-server.html |
 
 ### Инструменты рабочей станции
 
@@ -207,7 +234,7 @@ mcp/                             ← шаблон состава MCP (mcp.json) 
 
 ### Skills — открытый стандарт
 
-- **Этот репозиторий** = общие каталоги `qa` и `pm`; доставка через exporter или Claude marketplace.
+- **Этот репозиторий** = каталоги `qa`, `pm`, `dev`, `analytics`, `media`; доставка через exporter или Claude marketplace.
 - Открытый стандарт **Agent Skills** — папка-скилл с `SKILL.md`; свои skills клади в `plugins/qa/skills/` и отправляй push.
 - Сторонние Claude-плагины (handoff, understand-anything и т.п.) — через `/plugin marketplace add <repo-url>`.
 
@@ -220,7 +247,7 @@ mcp/                             ← шаблон состава MCP (mcp.json) 
 | Anthropic-Cybersecurity-Skills | security-skills с привязкой к MITRE ATT&CK / NIST; Apache-2.0 | https://github.com/mukul975/Anthropic-Cybersecurity-Skills |
 | claude-handoff | `/handoff:create` · `/handoff:resume` — передача контекста между сессиями через `HANDOFF.md` | https://github.com/willseltzer/claude-handoff |
 | zhoujie-claude-skills | `skill-system-analyst`: анализ системы «сначала карта, потом главы», доказательства файл:строка | https://github.com/zjfls/zhoujie-claude-skills |
-| data-analytics-skills | 31 skill аналитика: требования, качество данных, EDA, сводки; в `qa` взяты два | https://github.com/nimrodfisher/data-analytics-skills |
+| data-analytics-skills | требования и качество данных в `qa`, остальные 29 skills в `analytics` | https://github.com/nimrodfisher/data-analytics-skills |
 | NaCl | методология BA → SA → разработка на графе Neo4j; skills связаны и по одному не работают, взяты две идеи | https://github.com/ITSalt/NaCl |
 
 Паттерн **LLM-Wiki** (двухдеревная база знаний: ingest/query/lint поверх markdown вместо RAG) —
@@ -231,7 +258,7 @@ mcp/                             ← шаблон состава MCP (mcp.json) 
 - Обнови клон, создай новый каталог экспорта, повтори preview и `install --apply` с прежними
   `--components`. Правь источник: сгенерированные файлы перезаписывает следующий экспорт.
 - Для Claude marketplace сохраняется штатное обновление плагинов; rules и MCP обновляются отдельно.
-- Новый skill = папка в `plugins/qa/skills/` или `plugins/pm/skills/`; exporter обнаружит её сам.
+- Новый skill = папка в `plugins/<каталог>/skills/`; exporter обнаружит её сам.
 
 ## Проверка изменений
 
@@ -247,6 +274,5 @@ GitHub Actions запускает набор и сохраняет Allure result
 
 ## Лицензия
 
-MIT — см. [LICENSE](LICENSE). Производные сторонние skills (набор
-[mattpocock/skills](https://github.com/mattpocock/skills), тоже MIT) и их происхождение —
-в [NOTICE](NOTICE).
+MIT — см. [LICENSE](LICENSE). Сторонние skills сохраняют свои лицензии (в том числе MIT и Apache-2.0); происхождение —
+в [NOTICE](NOTICE), лицензии — в каталогах skills.

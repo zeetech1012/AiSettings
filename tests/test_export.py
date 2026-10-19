@@ -15,8 +15,8 @@ from settings_bundle import CLIENTS, ROOT, read_servers, render_bundle
 class TestExport:
     @allure.title("{client}: export the full baseline, compatible skills and portable paths")
     @allure.story("Client support")
-    @pytest.mark.parametrize("client,count", [("claude", 25), ("codex", 24), ("agy", 23),
-                                             ("qwen", 24), ("opencode", 23)])
+    @pytest.mark.parametrize("client,count", [("claude", 180), ("codex", 179), ("agy", 178),
+                                             ("qwen", 179), ("opencode", 178)])
     def test_client_bundles(self, servers, client, count):
         with allure.step("Given: the tracked baseline and source skill catalog"):
             baseline = (ROOT / "AGENTS.md").read_text()

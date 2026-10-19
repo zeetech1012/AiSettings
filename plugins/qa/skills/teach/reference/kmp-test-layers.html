@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reference — KMP Test Layers</title>
+<style>
+  body{margin:0;color:#16181c;background:#fff;
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:760px;margin:0 auto;padding:30px 20px 50px}
+  h1{font-size:21px;margin:0 0 2px}
+  .sub{color:#6b7280;font-size:12.5px;margin-bottom:18px}
+  h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#6750a4;margin:22px 0 6px}
+  code{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.86em;background:#f1f5fb;color:#0b3b6f;padding:1px 4px;border-radius:3px}
+  table{border-collapse:collapse;width:100%;font-size:12.5px;margin:6px 0}
+  th,td{border:1px solid #e3e6ea;padding:6px 8px;text-align:left;vertical-align:top}
+  th{background:#f4f6f8;font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:#6b7280}
+  td code{white-space:nowrap}
+  .rule{background:#efeaf8;border-radius:7px;padding:8px 12px;margin:6px 0;font-size:13px}
+  ul{margin:6px 0;padding-left:20px}
+  li{margin:3px 0}
+  .foot{margin-top:20px;border-top:1px solid #e3e6ea;padding-top:10px;font-size:11.5px;color:#6b7280}
+  @media print{.wrap{padding:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>KMP Test Layers — шпаргалка</h1>
+<div class="sub">source set (где код) × target (что исполняет). Шпаргалка к Уроку 1.</div>
+
+<h2>Source set → target → инструмент</h2>
+<table>
+  <thead><tr><th>Source set</th><th>Исполняется на</th><th>Инструмент</th><th>Для чего</th></tr></thead>
+  <tbody>
+    <tr><td><code>commonTest</code></td><td>ВСЕ таргеты (JVM-хост + iOS-Native + …)</td><td><code>kotlin.test</code>, coroutines-test, Turbine</td><td>чистая логика: ViewModel/UseCase/mapper/валидация</td></tr>
+    <tr><td><code>androidUnitTest</code></td><td>JVM-хост (без устройства)</td><td>JUnit + (Robolectric/MockK можно — JVM-only)</td><td>Android-логика, требующая JVM-рантайма</td></tr>
+    <tr><td><code>androidInstrumentedTest</code></td><td>Android device/эмулятор</td><td>Espresso / Kaspresso (+compose-support)</td><td>функционал/E2E, реальный рендер</td></tr>
+    <tr><td><code>iosTest</code></td><td>iOS-симулятор (Native)</td><td><code>compose.uiTest</code> / Native unit</td><td>Compose-UI на iOS, Native-специфика</td></tr>
+    <tr><td>Xcode UITest target</td><td>iOS device/симулятор</td><td>XCUITest (Swift)</td><td>iOS-специфика: клавиатура, accessibility, боевой флоу</td></tr>
+  </tbody>
+</table>
+
+<h2>Выбор слоя — 3 вопроса</h2>
+<ul>
+  <li>Чистая логика, без платформенных API? → <code>commonTest</code> (только multiplatform-либы).</li>
+  <li>Нужен платформенный рантайм/поведение? → платформенный unit set (<code>androidUnitTest</code>/<code>iosTest</code>).</li>
+  <li>UI? shared Compose без backend → <code>runComposeUiTest</code>; Android-девайс → Kaspresso; iOS-специфика → XCUITest.</li>
+</ul>
+
+<h2>Железные правила</h2>
+<div class="rule">В <code>commonTest</code> — <b>только мультиплатформенные</b> библиотеки. JVM-only (MockK/Robolectric/<code>java.*</code>) ломает Native-таргет.</div>
+<div class="rule"><code>runComposeUiTest</code> — <b>не</b> JUnit <code>TestRule</code>; вызов функции + <code>ComposeUiTest</code> receiver; finders/matchers как в Jetpack Compose.</div>
+<div class="rule"><code>compose.uiTest</code> держать в <code>iosTest</code>/платформенном set'е, не в <code>commonTest</code> — иначе Compose-runtime утечёт в JVM-host unit.</div>
+<div class="rule">Compose MP <b>1.11</b>: v2 <code>ComposeUiTest</code> + <code>StandardTestDispatcher</code> по умолчанию; <code>runComposeUiTest</code>/<code>runSkikoComposeUiTest</code> deprecated. С 1.9 — suspend-лямбда + <code>awaitIdle()</code>.</div>
+
+<h2>Локатор-контракт (для UI-слоёв)</h2>
+<ul>
+  <li><code>Modifier.testTag("…")</code> в Compose → на Android = semantics, на iOS = <code>accessibilityIdentifier</code> → один словарь локаторов для Compose-test и XCUITest.</li>
+  <li>Приоритет: <code>testTag</code> &gt; <code>contentDescription</code> &gt; видимый текст.</li>
+</ul>
+
+<div class="foot">Источники: kotlinlang.org (multiplatform-run-tests, compose-test, multiplatform-android-layout), JetBrains blog (Compose Multiplatform 1.11.0).</div>
+</div>
+</body>
+</html>

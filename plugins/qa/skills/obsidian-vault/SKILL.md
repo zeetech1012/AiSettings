@@ -11,8 +11,6 @@ description: Поиск, создание и управление заметка
 
 Структура — two-tree LLM-Wiki (канон: `Company/_wiki/_wiki-pattern.md`, правила — глобальные инструкции активного клиента):
 - `Company/_wiki/<проект>/` — рабочий LLM-слой (планы, tasks, аудиты, отчёты).
-  - `handoffs/<branch-slug>.md` — durable per-branch handoff (зеркало gitignored `./HANDOFF.md` репо;
-    слаг ветки `/`→`--`). Создаётся/обновляется handoff-скилами; правило — глобальные инструкции › Handoff.
 - `Company/Projects/<проект>/` — export-документация для коллег (→ Confluence через `doc-sync`).
 
 ## Access — два равноправных канала

@@ -147,3 +147,41 @@ ITSalt/NaCl — https://github.com/ITSalt/NaCl (MIT, срез 20fe4c6, 2026-09-2
 Код и тексты не копировались. Идеи пересказаны в разделах skills:
   - service-doc   «Сверка описания с кодом» (по nacl-tl-reconcile)
   - service-issue «Дефект после выпуска: где его пропустили» (по nacl-postmortem)
+
+--------------------------------------------------------------------------------
+Standalone-skill synchronization — 2026-10-19
+
+The complete published catalog is config/skill-catalog.json. Existing attribution above
+continues to apply. Imports were sanitised for public use; project storage, handoff and
+runtime-precedence notes were adapted. Installed plugin caches are not bundled.
+
+Additional mattpocock/skills workflows (MIT): see catalog source=mattpocock/skills.
+https://github.com/mattpocock/skills — LICENSE retained in each imported skill.
+The original snapshot listed above describes the earlier imports only; the additional
+workflows are the locally installed snapshot collected on 2026-10-19.
+
+nimrodfisher/data-analytics-skills (MIT): all 29 plugins/analytics skills in addition
+to the two existing QA skills. https://github.com/nimrodfisher/data-analytics-skills
+Copyright (c) 2026 Nimrod Fisher. LICENSE retained in the imported skills.
+
+heygen-com/hyperframes (Apache-2.0): plugins/media/skills.
+https://github.com/heygen-com/hyperframes
+Copyright 2026 HeyGen, Inc. LICENSE retained in each skill.
+Local changes: publication/runtime notes; media-use telemetry key moved to ENV and
+telemetry disabled without a key; brag music and generated cues omitted because exact
+redistribution terms were not supplied. Embedded font notices are retained separately.
+
+Understand-Anything (MIT): understand, understand-chat, understand-dashboard,
+understand-diff, understand-domain, understand-explain, understand-knowledge,
+understand-onboard. https://github.com/Lum1104/Understand-Anything
+Copyright (c) 2026 Yuxiang Lin. LICENSE retained in each skill.
+
+willseltzer/claude-handoff (MIT): handoff-create, handoff-resume, handoff-quick,
+handoff-plugin. https://github.com/willseltzer/claude-handoff
+LICENSE retained in each skill. Storage policy adapted to one gitignored HANDOFF.md.
+
+claude-plugins-official (Apache-2.0): claude-automation-recommender, code-simplifier.
+https://github.com/anthropics/claude-plugins-official
+LICENSE retained in each skill.
+
+i-have-adhd: LICENSE from the installed upstream retained beside SKILL.md.

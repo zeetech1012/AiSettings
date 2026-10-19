@@ -1,0 +1,8 @@
+{
+  "name": "media",
+  "description": "HyperFrames video, animation, audio and media workflows",
+  "author": {
+    "name": "zeetech1012"
+  },
+  "version": "0.1.0"
+}

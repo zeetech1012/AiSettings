@@ -40,12 +40,12 @@ export PATH="$ANDROID_HOME/platform-tools:$PATH"
 
 adb devices                          # устройство online?
 adb shell getprop sys.boot_completed # == 1 (эмулятор догрузился)
-adb shell pm list packages | grep example   # test+app APK уже установлены?
+adb shell pm list packages | grep company   # test+app APK уже установлены?
 ```
 
 `APP_PKG` берётся из `applicationId` в `composeApp/build.gradle.kts`, тестовый пакет —
-`$APP_PKG.test`. В ветках релиза 1.4.0 это `com.example.home`; в старых ветках был
-`com.legacy.examplehome`. **Сверять по gradle-файлу, не подставлять по памяти** — неверный
+`$APP_PKG.test`. В ветках релиза 1.4.0 это `com.company.home`; в старых ветках был
+`com.memgen.companyhome`. **Сверять по gradle-файлу, не подставлять по памяти** — неверный
 пакет даёт `run-as: unknown package`, а с подавленным stderr это читается как «файлов нет».
 
 Если APK не установлены — сначала **один раз** поставить их gradle'ом
@@ -60,12 +60,12 @@ adb shell pm list packages | grep example   # test+app APK уже установ
 e2e-тесты требуют `QA_TEST_*` как instrumentation args (в коде их НЕТ, fallback `""`).
 **Пустые креды → «wrong code/email» — это by design, не баг.**
 
-Креды брать из `~/.qa_creds`, **не хардкодить в команде** (файл под `chmod 600`,
+Креды брать из `~/.company_qa_creds`, **не хардкодить в команде** (файл под `chmod 600`,
 значения в вывод не печатать):
 
 ```bash
-set -a; . ~/.qa_creds; set +a
-APP_PKG=com.example.home            # сверить с applicationId
+set -a; . ~/.company_qa_creds; set +a
+APP_PKG=com.company.home            # сверить с applicationId
 
 adb shell am instrument -w \
   -e class "$APP_PKG.tests.smoke.LoginByEmailSubmitTest#failedLoginShowsError" \
@@ -128,10 +128,7 @@ allure generate allure-results -o allure-report --clean
   создаёт локально один файл-мусор вместо всех результатов. Проверять размеры выгруженных файлов
   против `run-as ls -l` — расхождение означает, что цикл отработал неверно.
 Отчёт целиком — каталог, поэтому в тикет он идёт архивом
-(`zip -qr report.zip .` из `allure-report`, затем `add_issue_attachment`). Выгрузка на центральный
-`allure-docker-service` вместо архива — процедура в вики:
-`Company/_wiki/qa-infra/allure-publish-procedure.md` (login → CSRF → send-results → generate-report,
-готовый скрипт и джоба CI).
+(`zip -qr report.zip .` из `allure-report`, затем `add_issue_attachment`).
 
 ---
 

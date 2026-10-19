@@ -33,7 +33,7 @@
 |---|---|
 | Прочитать дерево | `GET {base}` → `{allTestsCount, allOrphanTestsCount, folders[]}` |
 | Создать папку | `POST {base}/{parentId}` тело `{"name": "…"}`; корень — `parentId` = `-1` |
-| Положить тесты | `PUT {base}/{folderId}/tests` тело `{"add": ["WH-1", "WH-2"]}` |
+| Положить тесты | `PUT {base}/{folderId}/tests` тело `{"add": ["DEMO-51", "DEMO-54"]}` |
 | Удалить папку | `DELETE {base}/{folderId}` |
 
 > ⚠️ **Ловушка формы.** `POST {base}/{parentId}/folders` отвечает **404**. Хвостовой сегмент `/folders` нужен только при чтении дерева; при создании его нет.
@@ -47,7 +47,7 @@
 Наполнение набора и простановка окружения выполняются обычным `PUT /rest/api/2/issue/{key}`:
 
 ```
-{"fields": {"customfield_10310": ["WH-107"]}}   тесты в Test Set
+{"fields": {"customfield_10310": ["DEMO-55"]}}   тесты в Test Set
 {"fields": {"customfield_10323": ["device"]}}   Test Environments
 ```
 
@@ -88,3 +88,64 @@
 4. Уложить тесты пакетно, по одному `PUT` на папку.
 5. Проверить, что сирот не осталось.
 6. Тесты с заголовком `null` удалить, предварительно сохранив запись, и завести дефект на причину.
+
+## Ловушка — создание шагов теста через v2 (2026-09-15)
+
+`POST /rest/raven/2.0/api/test/{key}/steps` с телом `{"fields": {"Action": …, "Data": …, "Expected Result": …}}` отвечает
+`{"step": {"id": N, "attachmentIds": []}, "warnings": []}`: идентификатор вложен в `step`. Проверка `"id" in ответ` ложно
+считает вызов неудачным, а запасной `PUT /rest/raven/1.0/api/test/{key}/step` создаёт шаг второй раз (так задвоились
+шаги 32 тестов 15.09). Удаление шага: `DELETE /rest/raven/2.0/api/test/{key}/steps/{stepId}`. Результаты шагов прогона
+читать из `GET /rest/raven/1.0/api/testrun/{runId}` (поле `steps`), статус шага ставить `PUT /rest/raven/2.0/api/testrun/{runId}/step/{stepId}`
+с телом `{"status": "FAIL", "actualResult": …}`; `GET …/2.0/api/testrun/{id}/step` возвращает пустой список. Управление
+Test Repository требует членства учётной записи в роли проекта, права applicationRole недостаточно.
+
+## Создание Manual Test и Test Set через REST (проверено 2026-09-18, HW)
+
+Ручные тесты железа заводятся REST без импорта (канон «Generic Test только импортом» относится к автотестам):
+
+- `POST /rest/api/2/issue` с `issuetype 10200`, `customfield_10300: {"id": "10000"}` (Manual) и
+  `customfield_10309: "/Испытания изделий/<изделие>/<вид>"` для **существующей** папки принимается и кладёт тест в папку;
+  отказ `Invalid Test Repository Path` только на несуществующий путь. Для надёжности после создания
+  `PUT /rest/raven/1.0/api/testrepository/HW/folders/{id}/tests {"add": [...]}` (идемпотентно, тест переезжает).
+- Шаги: `POST /rest/raven/2.0/api/test/{key}/steps` с `{"fields": {"Action", "Data", "Expected Result"}}`, ответ `step.id`;
+  писать только в тест с нулём шагов (`GET …/2.0/api/test/{key}/steps` → `steps`).
+- Test Set: `issuetype 10201`; состав `GET/POST /rest/raven/1.0/api/testset/{key}/test`, `POST {"add": [...]}`
+  (OPTIONS разрешает POST); добавлять только отсутствующие.
+- Готовый скрипт с сухим прогоном, защитой от повтора и сверкой чтением: рабочий каталог
+  `qa-infra/xray/xray_create_tests.py` + `hw_fobos_tests.json` (67 тестов, 5 наборов за один проход, ~350 запросов, 0 ошибок).
+- Задачи релиза с `fixVersions`, компонентом и связью Relates: `qa-infra/jira/hw_release_tasks.py` + JSON;
+  тип связи на инстансе называется `Relates`, тип «Задача» 10101, `PUT …/issue/{key}?notifyUsers=false`
+  с `{"update": {"fixVersions": [{"add": {"id": …}}]}}` добавляет версию без письма.
+
+## Pre-Condition через REST (проверено 2026-09-18, HW)
+
+- Создание: `POST /rest/api/2/issue` с `issuetype 10203`, `customfield_10319: {"id": "10003"}` (тип Manual; Cucumber 10004,
+  Generic 10005), текст условий в `customfield_10320` (Conditions), компонент изделия, метка `hardware`.
+- Привязка к тестам: `POST /rest/raven/1.0/api/precondition/{key}/test {"add": [...]}` (OPTIONS даёт HEAD,POST,GET,OPTIONS);
+  состав читается `GET` там же; со стороны теста `GET /rest/raven/1.0/api/test/{key}/preconditions` (только чтение).
+  Добавлять только отсутствующие: повторный POST не проверялся на дубли.
+- Библиотека предусловий на изделие (3–6 штук) вместо предусловия первым шагом; скрипт с предусловиями, компонентами на тест
+  и папками по имени: `qa-infra/xray/xray_create_tests2.py` (134 объекта за проход, ok=118 fail=0).
+- Папка репозитория создаётся тем же скриптом: `POST …/folders/{parentId} {"name"}` затем шесть видов проверок; путь
+  `customfield_10309` принимается на создании теста только для уже существующей папки, поэтому создание папки идёт до тестов.
+
+## Импорт прогонов задним числом (Xray JSON `import/execution`), проверено 2026-09-21 на DEMO-56
+
+```text
+POST /rest/raven/1.0/import/execution   Content-Type: application/json, Bearer PAT
+{"info": {"project": "HW", "summary": …, "description": …, "revision": …, "testEnvironments": ["lab"], "testPlanKey": "DEMO-57",
+          "startDate": "2025-05-06T10:00:00+03:00", "finishDate": "2025-05-06T12:30:00+03:00"},
+ "tests": [{"testKey": "DEMO-58", "status": "FAIL", "start": "2025-05-06T10:05:00+03:00", "finish": "2025-05-06T10:40:00+03:00",
+            "comment": …, "executedBy": "example-user", "steps": [{"status": "PASS", "actualResult": …}, …]}]}
+→ 200 {"testExecIssue": {"key": "DEMO-56"}, "testIssues": {"success": [...]}}   # отказы тестов лежат в теле, сверять чтением
+```
+
+- Ложатся задним числом: Begin Date 10315, End Date 10316 (из info.startDate/finishDate), Revision 10317, Test Environments 10323,
+  Test Plan 10325; у Test Run startedOn/finishedOn, executedBy (и assignee), comment, статусы и Actual Result шагов.
+- Не ложится: Created задачи (= дата импорта). `info.version` только существующая версия Jira.
+- Последний статус тестов в плане берётся из последнего СОЗДАННОГО прогона, даты не участвуют: история задним числом перекрывает
+  текущие результаты (на DEMO-57 статусы сменились через ~5 минут после импорта, первое чтение отдаёт кеш). Исторические прогоны
+  в отдельный план, в хронологическом порядке, только для тестов без актуальных прогонов.
+- Шаги и комментарий читать `GET /rest/raven/1.0/api/testrun?testExecIssueKey=<exec>&testIssueKey=<test>`;
+  `testexec/<key>/test?detailed=true` шагов не отдаёт.
+- Скрипт: `qa-infra/xray/xray_import_runs.py` (--dry, защита от повтора по теме, ok=N fail=M).
