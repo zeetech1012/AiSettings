@@ -140,8 +140,6 @@ def render_bundle(client, servers):
                                 "mode": 0o700 if executable else 0o600})
 
     baseline = (ROOT / "AGENTS.md").read_text() + COMPATIBILITY
-    if client == "claude":
-        baseline += "\n" + (ROOT / "claude/CLAUDE.md").read_text().removeprefix("@AGENTS.md\n")
     if len(baseline) > profile.get("rules_limit", float("inf")):
         add(profile["baseline"], baseline.encode(), "rules")
         baseline = ("# AiSettings\n\nПеред началом каждой задачи прочитай полностью файл\n"

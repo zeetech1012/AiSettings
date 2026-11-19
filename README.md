@@ -1,12 +1,12 @@
 # AiSettings — общие настройки AI-клиентов
 
-Один источник командных правил, QA/PM, engineering, analytics и media skills и состава MCP для **Claude Code, Codex,
-Antigravity CLI (`agy`), Qwen Code и OpenCode**. Exporter готовит нативные конфиги из
-общих исходников; установщик показывает изменения и защищает личные файлы от перезаписи.
-Claude marketplace остаётся отдельным способом доставки тех же skills и sub-agents.
+Общие правила, skills (QA, PM, разработка, аналитика, медиа) и состав MCP для **Claude Code, Codex,
+Antigravity CLI (`agy`), Qwen Code и OpenCode**. Правила лежат одним файлом, `AGENTS.md`.
+Exporter собирает из общих исходников нативные конфиги клиентов, установщик показывает изменения
+и не перезаписывает личные файлы. Claude marketplace доставляет те же skills и sub-agents отдельно.
 
-> Личный проект автора. Публичный контент обезличен плейсхолдерами (`example.com`);
-> внутренние адреса (Git-хостинг, Jira DC, Confluence DC) каждый подставляет локально.
+> Личный проект автора. Внутренние адреса заменены плейсхолдерами (`example.com`):
+> Git-хостинг, Jira DC и Confluence DC каждый подставляет у себя.
 
 ## Экспорт и установка
 
@@ -20,12 +20,12 @@ aisettings_out="$(mktemp -d)"
   --output "$aisettings_out" --servers context7 playwright
 ```
 
-Получатся каталоги `claude/`, `codex/`, `agy/`, `qwen/`, `opencode/`: в каждом `home/`
+Exporter создаёт каталоги `claude/`, `codex/`, `agy/`, `qwen/`, `opencode/`: в каждом `home/`
 с файлами относительно домашнего каталога и `manifest.json` с контрольными суммами,
-составом и ограничениями. Экспорт повторяемый, существующий непустой каталог не затирается.
-Артефакты создаются вне репозитория. Для одного клиента укажи, например, `--client qwen`.
+составом и ограничениями. Повторный экспорт даёт тот же результат и не затирает непустой каталог.
+Пакеты создаются вне репозитория. Для одного клиента укажи, например, `--client qwen`.
 
-Preview и установка rules + skills для Codex:
+Предпросмотр и установка правил и skills для Codex:
 
 ```bash
 .venv/bin/python scripts/aisettings.py install --bundle "$aisettings_out/codex"
@@ -33,11 +33,11 @@ Preview и установка rules + skills для Codex:
 ```
 
 `install` без `--apply` ничего не записывает. Для другого клиента замени имя каталога.
-`--home /tmp/aisettings-test-home` позволяет проверить установку в отдельном каталоге.
+Флаг `--home /tmp/aisettings-test-home` ставит пакет в отдельный каталог для проверки.
 Используются стандартные пользовательские пути; нестандартные `CODEX_HOME` и
 `XDG_CONFIG_HOME` требуют ручной адаптации расположения файлов.
 
-MCP подключается отдельным выбором компонента, после проверки состава:
+MCP ставится отдельным компонентом, после проверки состава:
 
 ```bash
 .venv/bin/python scripts/aisettings.py install --bundle "$aisettings_out/codex" --components mcp
@@ -51,10 +51,10 @@ MCP подключается отдельным выбором компонен�
 Существующий личный `config.toml`, `settings.json` или файл правил нужно объединить
 с экспортом вручную; автоматического merge произвольных конфигов здесь нет. Чтобы поставить
 только skills, используй `--components skills`. Файлы с локальными изменениями защищены
-и при обновлении. Совпадающие чужие файлы не становятся управляемыми автоматически.
+и при обновлении. Файл, который совпал с пакетом, но поставлен не установщиком, управляемым не становится.
 
 Состояние установки хранится в `~/.local/share/aisettings/<client>.json` и содержит
-пути, компоненты и хеши, без содержимого файлов. Повторная установка того же пакета — no-op.
+пути, компоненты и хеши, без содержимого файлов. Повторная установка того же пакета ничего не меняет.
 Новая версия обновляет неизменённые управляемые файлы и удаляет только устаревшие файлы
 выбранных компонентов, если они не редактировались локально. Не удаляй файл состояния
 между обновлениями. Запись атомарна для отдельного файла; общей транзакции на случай сбоя диска нет.
@@ -136,13 +136,11 @@ MCP подключается отдельным выбором компонен�
 ## Что внутри
 
 ```
-AGENTS.md                        ← канонический текст правил (роль — персональная)
+AGENTS.md                        ← единственный файл правил; роль каждый добавляет у себя
 config/clients.json              ← нативные пути и ограничения клиентов
 scripts/aisettings.py            ← export / install / clients
 scripts/settings_bundle.py       ← преобразование rules, skills и MCP
 tests/                          ← проверки переносимости и сохранности личных файлов
-claude/CLAUDE.md                 ← @AGENTS.md + Claude-специфика
-claude/CLAUDE.example.md         ← образец детализации (секция роли заполняется под себя)
 claude/settings.json             ← шаблон: effortLevel, allowlist, hooks-гардрейлы, marketplaces, плагины
 .claude-plugin/marketplace.json  ← этот репозиторий = Claude-marketplace `ai-settings`
 plugins/qa/                      ← плагин: skills + sub-agents
@@ -161,6 +159,9 @@ plugins/pm/                      ← плагин: PM-линия (добавле
              Comms: team-communications · meeting-analyzer
   commands/  /cs:pm · /cs:pm-loop · /cs:grill-pm · /cs:harness
   agents/    cs-pm-orchestrator · harness-runner
+plugins/dev/                     ← инженерные workflows, handoff, настройка клиентов, тексты
+plugins/analytics/               ← EDA, метрики, когорты, A/B, отчёты
+plugins/media/                   ← HyperFrames: видео, анимация, аудио
 mcp/                             ← шаблон состава MCP (mcp.json) + что подставить лично (README.md)
 ```
 
@@ -168,7 +169,7 @@ mcp/                             ← шаблон состава MCP (mcp.json) 
 
 | Плагин | Версия | Skills | Состав |
 |---|---|---|---|
-| `qa` | 0.14.0 | 59 | тестирование, контракты, Allure/Xray, документация, DevTools и codegraph |
+| `qa` | 0.15.0 | 59 | тестирование, контракты, Allure, Xray и Zephyr, документация, DevTools и codegraph |
 | `pm` | 0.2.0 | 14 | Atlassian, delivery, коммуникации и cs-оркестрация |
 | `dev` | 0.1.0 | 56 | инженерные workflows, handoff, настройки клиентов и тексты |
 | `analytics` | 0.1.0 | 29 | EDA, метрики, сегментация, отчёты и проверка анализа |
@@ -198,7 +199,7 @@ Skills, привязанные к runtime (`canvas`, `sdk`, `create-hook`, `stat
 
 ## Open-source стек (что скачать)
 
-Весь набор стоит на open-source. Ссылки на upstream (секретов нет — подставляется локально):
+Ссылки на upstream. Секретов здесь нет, их подставляешь локально.
 
 ### MCP-серверы (состав — `mcp/`)
 
@@ -235,7 +236,7 @@ Skills, привязанные к runtime (`canvas`, `sdk`, `create-hook`, `stat
 ### Skills — открытый стандарт
 
 - **Этот репозиторий** = каталоги `qa`, `pm`, `dev`, `analytics`, `media`; доставка через exporter или Claude marketplace.
-- Открытый стандарт **Agent Skills** — папка-скилл с `SKILL.md`; свои skills клади в `plugins/qa/skills/` и отправляй push.
+- Открытый стандарт **Agent Skills** — папка-скилл с `SKILL.md`; свой skill добавляется папкой в `plugins/<плагин>/skills/` через pull request.
 - Сторонние Claude-плагины (handoff, understand-anything и т.п.) — через `/plugin marketplace add <repo-url>`.
 
 Проверенные сторонние наборы:
@@ -255,8 +256,8 @@ Skills, привязанные к runtime (`canvas`, `sdk`, `create-hook`, `stat
 
 ## Обновления
 
-- Обнови клон, создай новый каталог экспорта, повтори preview и `install --apply` с прежними
-  `--components`. Правь источник: сгенерированные файлы перезаписывает следующий экспорт.
+- Обнови клон, создай новый каталог экспорта, повтори предпросмотр и `install --apply` с прежними
+  `--components`. Правь `AGENTS.md` и skills в репозитории: сгенерированные файлы следующий экспорт пересоздаст.
 - Для Claude marketplace сохраняется штатное обновление плагинов; rules и MCP обновляются отдельно.
 - Новый skill = папка в `plugins/<каталог>/skills/`; exporter обнаружит её сам.
 
