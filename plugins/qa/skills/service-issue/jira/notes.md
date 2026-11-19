@@ -153,7 +153,7 @@ mcp-atlassian конвертирует **markdown → Jira wiki** на запи�
   REST `POST /rest/api/2/issue/<KEY>/attachments`.
 - **`duedate` недоступен на экране создания** — Jira отвечает `Field 'duedate' cannot be set`.
   Срок писать в текст описания.
-- **Пользователей всего 4**: `example-user`, `example-user`, `example-user`, `example-user`. Любой другой
+- **Пользователей всего 4**: `example-user-1`, `example-user-2`, `example-user-3`, `example-user-4`. Любой другой
   исполнитель не назначается — писать его строкой в описание.
 - **Приоритеты**: `Highest`, `High`, `Medium`, `Low` (проверены в бою).
 - **Архитектуры прав нет**: ключевые права на холдере `applicationRole` = любой залицензированный
