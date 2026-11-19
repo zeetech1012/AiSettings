@@ -1,5 +1,5 @@
 {
-  "snapshot": "2026-10-19",
+  "snapshot": "2026-11-19",
   "skills": [
     {
       "name": "a11y-debugging",
@@ -905,6 +905,7 @@
   "excluded": {
     "huly-doc-sync": "retired transport",
     "huly-service-issue": "retired transport",
-    "docmost-qa-strategy": "retired transport"
+    "docmost-qa-strategy": "retired transport",
+    "mail": "depends on a private local mail client"
   }
 }

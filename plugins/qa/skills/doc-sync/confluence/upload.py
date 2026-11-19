@@ -197,7 +197,7 @@ def add_toc(body):
 
 def find_page(space, title):
     q = urllib.parse.urlencode({"spaceKey": space, "title": title,
-                                "expand": "version"})
+                                "expand": "version,metadata.labels"})
     res = api("GET", "/rest/api/content?" + q)
     return res["results"][0] if res.get("results") else None
 
@@ -216,7 +216,7 @@ def upsert(space, title, body, parent_id, dry=False, known_id=None):
     existing = None
     if known_id:
         try:
-            existing = api("GET", f"/rest/api/content/{known_id}?expand=version")
+            existing = api("GET", f"/rest/api/content/{known_id}?expand=version,metadata.labels")
         except RuntimeError:
             existing = None
     by_title = find_page(space, title)
@@ -225,6 +225,10 @@ def upsert(space, title, body, parent_id, dry=False, known_id=None):
                            f"а в registry за этот файл отвечает {existing['id']}; прогон остановлен")
     if not existing:
         existing = by_title
+    # CHANGED: требования редактируются в Confluence; vault не заменяет их текст.
+    if existing and any(label.get("name") == "requirements-confluence"
+                        for label in existing.get("metadata", {}).get("labels", {}).get("results", [])):
+        return "пропущена", existing["id"]
     if dry:
         act = "переименовать" if existing and existing["title"] != title else (
             "обновить" if existing else "создать")
@@ -360,7 +364,7 @@ def walk(space, prefix, root, rel, parent_id, entries, used, dry, code=None, ind
         act, pid = upsert(space, title, body, parent_id, dry, known)
         entries.pop(rel + "/", None)
         print(f"{pad}{act:10} [раздел] {title}  id={pid}")
-        if not dry:
+        if not dry and act != "пропущена":
             d = attach_diagrams(p, pid)
             if d:
                 print(f"{pad}           диаграмм вложено: {d}")
@@ -380,7 +384,7 @@ def walk(space, prefix, root, rel, parent_id, entries, used, dry, code=None, ind
         act, pid = upsert(space, title, body, parent_id, dry,
                           entries.get(relpath, {}).get("pageId"))
         print(f"{pad}{act:10} {title}  id={pid}")
-        if not dry:
+        if not dry and act != "пропущена":
             d = attach_diagrams(p, pid)
             if d:
                 print(f"{pad}           диаграмм вложено: {d}")
@@ -442,7 +446,7 @@ def main():
             act, parent = upsert(space, title, body, root_parent, dry,
                                  entries.get("README.md", {}).get("pageId"))
             print(f"  {act:10} [родитель] {title}  id={parent}")
-            if not dry:
+            if not dry and act != "пропущена":
                 d = attach_diagrams(p, parent)
                 if d:
                     print(f"             диаграмм вложено: {d}")
@@ -463,7 +467,7 @@ def main():
         act, pid = upsert(space, title, body, parent, dry,
                           entries.get(f, {}).get("pageId"))
         print(f"  {act:10} {title}  id={pid}")
-        if not dry:
+        if not dry and act != "пропущена":
             d = attach_diagrams(p, pid)
             if d:
                 print(f"             диаграмм вложено: {d}")

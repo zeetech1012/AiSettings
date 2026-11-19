@@ -207,7 +207,8 @@ def run_fields(rows, dry: bool, verify_only: bool) -> int:
 
     ok = fail = 0
     for key, diff in pending:
-        code, response = call("PUT", ISSUE_PATH.format(key=key), {"fields": diff})
+        # без писем исполнителям и наблюдателям на каждую задачу массовой правки
+        code, response = call("PUT", ISSUE_PATH.format(key=key) + "?notifyUsers=false", {"fields": diff})
         if code in (200, 204):
             ok += 1
         else:
